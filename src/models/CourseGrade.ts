@@ -1,31 +1,26 @@
 class CourseGrade {
-  private code: string;
   private name: string;
-  private points: number;
-  private grade: number;
+  private scope: number;
+  private grade: string;
+  private date: string;
 
-  constructor(code: string, name: string, points: number, grade: number) {
-    this.code = code;
+  constructor(name: string, scope: number, grade: string, date: string) {
     this.name = name;
-    this.points = points;
+    this.scope = scope;
     this.grade = grade;
+    this.date = date;
   }
 
   getRow(): string[] {
-    return [
-      this.code,
-      this.name,
-      this.points.toString(),
-      this.grade.toString(),
-    ];
+    return [this.name, this.scope.toString(), this.grade, this.date];
   }
 
-  setGrade(newGrade: number): void {
+  setGrade(newGrade: string): void {
     this.grade = newGrade;
   }
 
-  setPoints(newPoints: number): void {
-    this.points = newPoints;
+  setScope(newScope: number): void {
+    this.scope = newScope;
   }
 }
 
