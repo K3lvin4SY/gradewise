@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { ThemeProvider } from "./theme-provider";
 import type { CourseGrade } from "./models/CourseGrade";
+import ProgramSelector from "./program-selector";
 
 function App() {
   const [courses, setCourses] = useState<CourseGrade[]>([]);
@@ -12,6 +13,7 @@ function App() {
     <ThemeProvider defaultTheme="light">
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 max-w-5xl mx-auto px-4 mt-4 mb-6">
         <h1 className="text-3xl font-bold text-center ">Courses</h1>
+        <ProgramSelector />
       </div>
     </ThemeProvider>
   );
