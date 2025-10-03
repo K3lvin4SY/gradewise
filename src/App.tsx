@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { ThemeProvider } from "./theme-provider";
 import type { CourseGrade } from "./models/CourseGrade";
-import TranscriptLoader from "./transcriptLoader";
+import TranscriptLoader from "./transcript-loader";
 
 function App() {
   const [courses, setCourses] = useState<CourseGrade[]>([]);
