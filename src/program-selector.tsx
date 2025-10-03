@@ -11,13 +11,64 @@ import {
 import { useState } from "react";
 import { Button } from "./components/ui/button";
 import { IconSearch } from "@tabler/icons-react";
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+
+type Option = { value: string; label: string };
 
 function ProgramSelector() {
+  const [programOptions, setProgramOptions] = useState<Option[]>([]);
+  const [yearOptions, setYearOptions] = useState<Option[]>([]);
+
+  const [program, setProgram] = useState<string | undefined>(undefined);
+  const [year, setYear] = useState<string | undefined>(undefined);
+
+  function handleSearch(event: React.FormEvent) {
+    event.preventDefault();
+    // Implement search logic here
+    console.log("Search submitted:", event);
+  }
+
+  function fetchOptions() {
+    fetch("https://api.lth.lu.se/lot/courses/programmes?kull=false")
+      .then((response) => response.json())
+      .then((data) => {
+        const programs = data.map((item: any) => ({
+          value: item.programmeCode,
+          label: item.programmeCode + " - " + item.programme_en,
+        }));
+        setProgramOptions(programs);
+      });
+
+    fetch("https://api.lth.lu.se/lot/courses/academic-years")
+      .then((response) => response.json())
+      .then((data) => {
+        const years = data.map((item: any) => ({
+          value: item.academicYearId,
+          label: item.academicYearShort,
+        }));
+        setYearOptions(years);
+      });
+  }
+
   return (
     <Dialog>
-      <form>
+      <form onSubmit={handleSearch}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={fetchOptions}>
             <IconSearch />
             Search program
           </Button>
@@ -29,7 +80,20 @@ function ProgramSelector() {
               Search for a program to add to your list.
             </DialogDescription>
           </DialogHeader>
-          test text here.
+          <Combobox
+            key={"program"}
+            options={programOptions}
+            type="program"
+            value={program}
+            onChange={setProgram}
+          />
+          <Combobox
+            key={"year"}
+            options={yearOptions}
+            type="year"
+            value={year}
+            onChange={setYear}
+          />
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
@@ -43,3 +107,69 @@ function ProgramSelector() {
 }
 
 export default ProgramSelector;
+
+type ComboBoxType = {
+  options: Option[];
+  type: string;
+  value?: string;
+  onChange?: (value: string) => void;
+};
+function Combobox({ options, type, value, onChange }: ComboBoxType) {
+  const [open, setOpen] = useState(false);
+  const [internalValue, setInternalValue] = useState(value || "");
+
+  const setValue = (val: string) => {
+    setInternalValue(val);
+    onChange?.(val);
+  };
+
+  const currentValue = value || internalValue;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-[200px] justify-between"
+        >
+          {currentValue
+            ? options.find((option) => option.value === currentValue)?.label
+            : `Select ${type}...`}
+          <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0">
+        <Command>
+          <CommandInput placeholder={`Search ${type}...`} />
+          <CommandList>
+            <CommandEmpty>No {type} found.</CommandEmpty>
+            <CommandGroup>
+              {options.map((option) => (
+                <CommandItem
+                  key={option.value}
+                  value={option.value}
+                  onSelect={(currentValue) => {
+                    setValue(currentValue);
+                    setOpen(false);
+                  }}
+                >
+                  <CheckIcon
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      currentValue === option.value
+                        ? "opacity-100"
+                        : "opacity-0"
+                    )}
+                  />
+                  {option.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
