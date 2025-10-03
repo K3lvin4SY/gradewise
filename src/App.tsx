@@ -13,7 +13,7 @@ function App() {
     <ThemeProvider defaultTheme="light">
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 max-w-5xl mx-auto px-4 mt-4 mb-6">
         <h1 className="text-3xl font-bold text-center ">Courses</h1>
-        <ProgramSelector />
+        <ProgramSelector setCourseGrades={setCourses} />
       </div>
     </ThemeProvider>
   );

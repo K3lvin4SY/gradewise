@@ -26,10 +26,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import { Label } from "@radix-ui/react-label";
+import { CourseGrade } from "./models/CourseGrade";
 
 type Option = { value: string; label: string };
 
-function ProgramSelector() {
+interface PropType {
+  setCourseGrades: (grades: CourseGrade[]) => void;
+}
+function ProgramSelector({ setCourseGrades }: PropType) {
   const [programOptions, setProgramOptions] = useState<Option[]>([]);
   const [yearOptions, setYearOptions] = useState<Option[]>([]);
 
@@ -38,8 +43,31 @@ function ProgramSelector() {
 
   function handleSearch(event: React.FormEvent) {
     event.preventDefault();
-    // Implement search logic here
-    console.log("Search submitted:", event);
+
+    fetch(
+      `https://api.lth.lu.se/lot/courses?programmeCode=${program}&academicYearId=${year}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const grades = parseProgramData(data);
+        console.log("Set course grades from program:", grades);
+        setCourseGrades(grades);
+      })
+      .catch((error) => {
+        console.error("Error fetching courses:", error);
+      });
+  }
+
+  function parseProgramData(data: any[]): CourseGrade[] {
+    return data.map(
+      (course: any) =>
+        new CourseGrade(
+          course.name_en,
+          course.credits,
+          "", // No Grade
+          "" // No Date
+        )
+    );
   }
 
   function fetchOptions() {
@@ -66,42 +94,50 @@ function ProgramSelector() {
 
   return (
     <Dialog>
-      <form onSubmit={handleSearch}>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="sm" onClick={fetchOptions}>
-            <IconSearch />
-            Search program
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" onClick={fetchOptions}>
+          <IconSearch />
+          Search program
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <form onSubmit={handleSearch}>
           <DialogHeader>
             <DialogTitle>Search program</DialogTitle>
             <DialogDescription>
               Search for a program to add to your list.
             </DialogDescription>
           </DialogHeader>
-          <Combobox
-            key={"program"}
-            options={programOptions}
-            type="program"
-            value={program}
-            onChange={setProgram}
-          />
-          <Combobox
-            key={"year"}
-            options={yearOptions}
-            type="year"
-            value={year}
-            onChange={setYear}
-          />
+          <div className="grid gap-4">
+            <div className="grid gap-3">
+              <Label htmlFor="name-1">Program</Label>
+              <Combobox
+                key="program"
+                options={programOptions}
+                type="program"
+                value={program}
+                onChange={setProgram}
+              />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="username-1">Academic Year</Label>
+              <Combobox
+                key="year"
+                options={yearOptions}
+                type="year"
+                value={year}
+                onChange={setYear}
+              />
+            </div>
+          </div>
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
             <Button type="submit">Search</Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }
