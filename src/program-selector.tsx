@@ -59,15 +59,19 @@ function ProgramSelector({ setCourseGrades }: PropType) {
   }
 
   function parseProgramData(data: any[]): CourseGrade[] {
-    return data.map(
-      (course: any) =>
-        new CourseGrade(
-          course.name_en,
-          course.credits,
-          "", // No Grade
-          "" // No Date
-        )
-    );
+    return data
+      .filter((course) => course.choice === "mandatory")
+      .sort((a, b) => a.groupId.localeCompare(b.groupId)) // not working?
+      .sort((a, b) => a.sortOrder.localeCompare(b.sortOrder)) // not working?
+      .map(
+        (course: any) =>
+          new CourseGrade(
+            course.name_en,
+            course.credits,
+            "", // No Grade
+            "" // No Date
+          )
+      );
   }
 
   function fetchOptions() {
