@@ -61,8 +61,18 @@ function ProgramSelector({ setCourseGrades }: PropType) {
   function parseProgramData(data: any[]): CourseGrade[] {
     return data
       .filter((course) => course.choice === "mandatory")
-      .sort((a, b) => a.groupId.localeCompare(b.groupId)) // not working?
-      .sort((a, b) => a.sortOrder.localeCompare(b.sortOrder)) // not working?
+      .map((course) => {
+        const periods = course.timePlans[0]?.studyPeriods.filter(
+          (item: null | any) => item !== null
+        ).length;
+        const startPeriod = course.timePlans[0]?.studyPeriods.findIndex(
+          (item: null | any) => item !== null
+        );
+        return { ...course, periods, startPeriod };
+      })
+      .sort((a, b) => a.periods - b.periods)
+      .sort((a, b) => a.startPeriod - b.startPeriod)
+      .sort((a, b) => a.year - b.year)
       .map(
         (course: any) =>
           new CourseGrade(
