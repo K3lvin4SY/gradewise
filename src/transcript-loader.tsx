@@ -1,3 +1,4 @@
+import { Loader2Icon } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { CourseGrade } from "./models/CourseGrade";
 import { IconFileUpload } from "@tabler/icons-react";
@@ -64,7 +65,11 @@ function TranscriptLoader({ setCourseGrades }: PropType) {
         style={{ display: "none" }}
       />
       <Button onClick={handleButtonClick} disabled={isLoading}>
-        <IconFileUpload />
+        {isLoading ? (
+          <Loader2Icon className="animate-spin" />
+        ) : (
+          <IconFileUpload />
+        )}
         {isLoading ? "Loading..." : "Upload Transcript"}
       </Button>
     </>
