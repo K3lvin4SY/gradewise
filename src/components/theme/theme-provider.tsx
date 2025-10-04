@@ -4,6 +4,7 @@ type ColorMode = "dark" | "light" | "system";
 type ThemeName =
   | "default"
   | "quarth"
+  | "ocean-breeze"
   | "bold-tech"
   | "neo-brutalism"
   | "elegant-luxury";
@@ -56,6 +57,7 @@ export function ThemeProvider({
       "dark",
       "default",
       "quarth",
+      "ocean-breeze",
       "bold-tech",
       "neo-brutalism",
       "elegant-luxury"

@@ -38,6 +38,11 @@ const themes: Theme[] = [
     colors: ["#1e40af", "#3b82f6", "#dbeafe", "#60a5fa"],
   },
   {
+    name: "Ocean Breeze",
+    value: "ocean-breeze",
+    colors: ["#22c55e", "#d1fae5", "#e0f2fe", "#e5e7eb"],
+  },
+  {
     name: "Bold Tech",
     value: "bold-tech",
     colors: ["#7c3aed", "#a855f7", "#f3e8ff", "#c084fc"],
