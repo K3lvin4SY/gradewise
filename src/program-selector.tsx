@@ -28,6 +28,7 @@ import {
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
 import { CourseGrade } from "./models/CourseGrade";
+import { ScrollArea } from "./components/ui/scroll-area";
 
 type Option = { value: string; label: string };
 
@@ -196,29 +197,31 @@ function Combobox({ options, type, value, onChange }: ComboBoxType) {
         <Command>
           <CommandInput placeholder={`Search ${type}...`} />
           <CommandList>
-            <CommandEmpty>No {type} found.</CommandEmpty>
-            <CommandGroup>
-              {options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  <CheckIcon
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      currentValue === option.value
-                        ? "opacity-100"
-                        : "opacity-0"
-                    )}
-                  />
-                  {option.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            <ScrollArea>
+              <CommandEmpty>No {type} found.</CommandEmpty>
+              <CommandGroup>
+                {options.map((option) => (
+                  <CommandItem
+                    key={option.value}
+                    value={option.value}
+                    onSelect={(currentValue) => {
+                      setValue(currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    <CheckIcon
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        currentValue === option.value
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                    {option.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </ScrollArea>
           </CommandList>
         </Command>
       </PopoverContent>
