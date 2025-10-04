@@ -182,15 +182,17 @@ function Combobox({ options, type, value, onChange }: ComboBoxType) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="min-w-[200px] max-w-[300px] justify-between"
         >
-          {currentValue
-            ? options.find((option) => option.value === currentValue)?.label
-            : `Select ${type}...`}
+          <span className="truncate">
+            {currentValue
+              ? options.find((option) => option.value === currentValue)?.label
+              : `Select ${type}...`}
+          </span>
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="min-w-[200px] p-0">
         <Command>
           <CommandInput placeholder={`Search ${type}...`} />
           <CommandList>
