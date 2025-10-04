@@ -17,6 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useTheme } from "@/components/theme/theme-provider";
+import { ScrollArea } from "../ui/scroll-area";
 
 type Theme = {
   name: string;
@@ -94,42 +95,44 @@ export function ThemeChooser() {
         <Command>
           <CommandInput placeholder="Search themes..." />
           <CommandList>
-            <CommandEmpty>No theme found.</CommandEmpty>
-            <CommandGroup>
-              <div className="text-xs text-muted-foreground px-2 py-1.5 font-medium">
-                {themes.length} themes
-              </div>
-              {themes.map((themeItem) => (
-                <CommandItem
-                  key={themeItem.value}
-                  value={themeItem.value}
-                  onSelect={handleThemeSelect}
-                  className="flex items-center gap-3 px-3 py-2"
-                >
-                  <div className="flex gap-1">
-                    {themeItem.colors.map((color, index) => (
-                      <div
-                        key={index}
-                        className="w-3 h-3 rounded-full border border-border/50"
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                  </div>
-                  <span className="flex-1">{themeItem.name}</span>
-                  {themeItem.new && (
-                    <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
-                      New
-                    </span>
-                  )}
-                  <Check
-                    className={cn(
-                      "ml-auto h-4 w-4",
-                      theme === themeItem.value ? "opacity-100" : "opacity-0"
+            <ScrollArea>
+              <CommandEmpty>No theme found.</CommandEmpty>
+              <CommandGroup>
+                <div className="text-xs text-muted-foreground px-2 py-1.5 font-medium">
+                  {themes.length} themes
+                </div>
+                {themes.map((themeItem) => (
+                  <CommandItem
+                    key={themeItem.value}
+                    value={themeItem.value}
+                    onSelect={handleThemeSelect}
+                    className="flex items-center gap-3 px-3 py-2"
+                  >
+                    <div className="flex gap-1">
+                      {themeItem.colors.map((color, index) => (
+                        <div
+                          key={index}
+                          className="w-3 h-3 rounded-full border border-border/50"
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
+                    <span className="flex-1">{themeItem.name}</span>
+                    {themeItem.new && (
+                      <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
+                        New
+                      </span>
                     )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        theme === themeItem.value ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </ScrollArea>
           </CommandList>
         </Command>
       </PopoverContent>
