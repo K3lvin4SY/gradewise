@@ -1,7 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 type ColorMode = "dark" | "light" | "system";
-type ThemeName = "default" | "quarth" | "bold-tech";
+type ThemeName =
+  | "default"
+  | "quarth"
+  | "bold-tech"
+  | "neo-brutalism"
+  | "elegant-luxury";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -46,7 +51,15 @@ export function ThemeProvider({
     const root = window.document.documentElement;
 
     // Remove all color modes and themes
-    root.classList.remove("light", "dark", "default", "quarth", "bold-tech");
+    root.classList.remove(
+      "light",
+      "dark",
+      "default",
+      "quarth",
+      "bold-tech",
+      "neo-brutalism",
+      "elegant-luxury"
+    );
 
     // Add current theme
     root.classList.add(theme);

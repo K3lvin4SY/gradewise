@@ -40,6 +40,16 @@ const themes: Theme[] = [
     value: "bold-tech",
     colors: ["#7c3aed", "#a855f7", "#f3e8ff", "#c084fc"],
   },
+  {
+    name: "Neo Brutalism",
+    value: "neo-brutalism",
+    colors: ["#ff6666", "#3399ff", "#ffff33", "#ffffff"],
+  },
+  {
+    name: "Elegant Luxury",
+    value: "elegant-luxury",
+    colors: ["#b91c1c", "#b45309", "#92400e", "#44403c"],
+  },
 ];
 
 export function ThemeChooser() {
@@ -60,7 +70,7 @@ export function ThemeChooser() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="min-w-[200px] justify-between"
         >
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
@@ -79,7 +89,7 @@ export function ThemeChooser() {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[280px] p-0">
+      <PopoverContent className="min-w-[280px] p-0">
         <Command>
           <CommandInput placeholder="Search themes..." />
           <CommandList>
