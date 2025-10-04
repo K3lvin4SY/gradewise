@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useTheme } from "@/theme-provider";
+import { useTheme } from "@/components/theme/theme-provider";
 
 type Theme = {
   name: string;
@@ -26,14 +26,14 @@ type Theme = {
 
 const themes: Theme[] = [
   {
-    name: "Quarth",
-    value: "quarth",
-    colors: ["#1e40af", "#3b82f6", "#dbeafe", "#60a5fa"],
-  },
-  {
     name: "Default",
     value: "default",
     colors: ["#f8fafc", "#64748b", "#0f172a", "#94a3b8"],
+  },
+  {
+    name: "Quarth",
+    value: "quarth",
+    colors: ["#1e40af", "#3b82f6", "#dbeafe", "#60a5fa"],
   },
   {
     name: "Bold Tech",

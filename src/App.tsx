@@ -2,8 +2,8 @@ import "./App.css";
 
 import { useState } from "react";
 
-import { ThemeProvider } from "./theme-provider";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeProvider } from "./components/theme/theme-provider";
+import { ThemeToggle } from "./components/theme/theme-toggle";
 import { ThemeChooser } from "./components/theme/theme-chooser";
 import type { CourseGrade } from "./models/CourseGrade";
 
