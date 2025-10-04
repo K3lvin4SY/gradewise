@@ -22,6 +22,7 @@ type Theme = {
   name: string;
   value: string;
   colors: string[];
+  new?: boolean;
 };
 
 const themes: Theme[] = [
@@ -115,7 +116,7 @@ export function ThemeChooser() {
                     ))}
                   </div>
                   <span className="flex-1">{themeItem.name}</span>
-                  {themeItem.value === "quarth" && (
+                  {themeItem.new && (
                     <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
                       New
                     </span>
