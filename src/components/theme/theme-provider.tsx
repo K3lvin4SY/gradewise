@@ -1,3 +1,4 @@
+import { get } from "http";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type ColorMode = "dark" | "light" | "system";
@@ -22,6 +23,17 @@ type ThemeProviderState = {
   theme: ThemeName;
   setColorMode: (mode: ColorMode) => void;
   setTheme: (theme: ThemeName) => void;
+  effectiveColorMode: "dark" | "";
+};
+
+// Gets the effective color mode
+const getEffectiveColorMode = (colorMode: ColorMode): "dark" | "" => {
+  if (colorMode === "system") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "";
+  }
+  return colorMode === "dark" ? "dark" : "";
 };
 
 const initialState: ThemeProviderState = {
@@ -29,6 +41,7 @@ const initialState: ThemeProviderState = {
   theme: "quarth",
   setColorMode: () => null,
   setTheme: () => null,
+  effectiveColorMode: getEffectiveColorMode("system"),
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
@@ -91,6 +104,7 @@ export function ThemeProvider({
       localStorage.setItem(themeStorageKey, newTheme);
       setTheme(newTheme);
     },
+    effectiveColorMode: getEffectiveColorMode(colorMode),
   };
 
   return (

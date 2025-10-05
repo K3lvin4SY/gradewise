@@ -22,7 +22,6 @@ import { ScrollArea } from "../ui/scroll-area";
 type Theme = {
   name: string;
   value: string;
-  colors: string[];
   new?: boolean;
 };
 
@@ -30,38 +29,32 @@ const themes: Theme[] = [
   {
     name: "Default",
     value: "default",
-    colors: ["#f8fafc", "#64748b", "#0f172a", "#94a3b8"],
   },
   {
     name: "Quarth",
     value: "quarth",
-    colors: ["#1e40af", "#3b82f6", "#dbeafe", "#60a5fa"],
   },
   {
     name: "Ocean Breeze",
     value: "ocean-breeze",
-    colors: ["#22c55e", "#d1fae5", "#e0f2fe", "#e5e7eb"],
   },
   {
     name: "Bold Tech",
     value: "bold-tech",
-    colors: ["#7c3aed", "#a855f7", "#f3e8ff", "#c084fc"],
   },
   {
     name: "Neo Brutalism",
     value: "neo-brutalism",
-    colors: ["#ff6666", "#3399ff", "#ffff33", "#ffffff"],
   },
   {
     name: "Elegant Luxury",
     value: "elegant-luxury",
-    colors: ["#b91c1c", "#b45309", "#92400e", "#44403c"],
   },
 ];
 
 export function ThemeChooser() {
   const [open, setOpen] = React.useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, effectiveColorMode } = useTheme();
 
   const handleThemeSelect = (themeValue: string) => {
     setTheme(themeValue as any);
@@ -80,14 +73,23 @@ export function ThemeChooser() {
           className="min-w-[200px] justify-between"
         >
           <div className="flex items-center gap-2">
-            <div className="flex gap-1">
-              {selectedThemeData?.colors.map((color, index) => (
-                <div
-                  key={index}
-                  className="w-3 h-3 rounded-full border border-border/50"
-                  style={{ backgroundColor: color }}
-                />
-              ))}
+            <div className={`flex gap-1`}>
+              <div
+                key={0}
+                className="w-3 h-3 rounded-full border border-border/50 bg-primary"
+              />
+              <div
+                key={1}
+                className="w-3 h-3 rounded-full border border-border/50 bg-accent"
+              />
+              <div
+                key={2}
+                className="w-3 h-3 rounded-full border border-border/50 bg-secondary"
+              />
+              <div
+                key={3}
+                className="w-3 h-3 rounded-full border border-border/50 bg-border"
+              />
             </div>
             <span className="truncate">
               {selectedThemeData?.name || "Select theme..."}
@@ -113,14 +115,25 @@ export function ThemeChooser() {
                     onSelect={handleThemeSelect}
                     className="flex items-center gap-3 px-3 py-2"
                   >
-                    <div className="flex gap-1">
-                      {themeItem.colors.map((color, index) => (
-                        <div
-                          key={index}
-                          className="w-3 h-3 rounded-full border border-border/50"
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
+                    <div
+                      className={`flex gap-1 ${themeItem.value} ${effectiveColorMode}`}
+                    >
+                      <div
+                        key={0}
+                        className="w-3 h-3 rounded-full border border-border/50 bg-primary"
+                      />
+                      <div
+                        key={1}
+                        className="w-3 h-3 rounded-full border border-border/50 bg-accent"
+                      />
+                      <div
+                        key={2}
+                        className="w-3 h-3 rounded-full border border-border/50 bg-secondary"
+                      />
+                      <div
+                        key={3}
+                        className="w-3 h-3 rounded-full border border-border/50 bg-border"
+                      />
                     </div>
                     <span className="flex-1">{themeItem.name}</span>
                     {themeItem.new && (
