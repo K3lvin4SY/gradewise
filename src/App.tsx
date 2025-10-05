@@ -45,7 +45,7 @@ function App() {
     <ThemeProvider>
       <nav className="w-[80vw] mx-auto">
         <div className="my-4 flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-center ">Färskt & Fint</h1>
+          <h1 className="text-3xl font-bold text-center ">GradeWise</h1>
           <div className="mr-4 flex gap-2">
             <ThemeChooser />
             <ThemeToggle />
