@@ -66,8 +66,8 @@ function GetStarted() {
           rootMargin="-100px"
           textAlign="center"
         />
-
-        <Button asChild className="py-4 px-8 text-lg font-bold rounded-lg">
+        <br />
+        <Button asChild className="py-4 px-8 text-lg font-bold rounded-lg ">
           <Link to="/table-page">Get Started</Link>
         </Button>
       </div>
