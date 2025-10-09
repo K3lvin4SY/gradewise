@@ -1,5 +1,3 @@
-import "./App.css";
-
 import { useMemo, useState } from "react";
 
 import { ThemeProvider } from "./components/theme/theme-provider";
@@ -8,7 +6,7 @@ import { ThemeChooser } from "./components/theme/theme-chooser";
 import type { CourseGrade } from "./models/CourseGrade";
 import { Link, Outlet } from "react-router-dom";
 
-function App() {
+function Layout() {
   const [courses, setCourses] = useState<CourseGrade[]>([]);
 
   return (
@@ -27,12 +25,9 @@ function App() {
       <Outlet context={{ courses, setCourses }} />
       <div className="flex flex-col items-center justify-center mt-[27vh]">
         <br />
-        
       </div>
-      
-      
     </ThemeProvider>
   );
 }
 
-export default App;
+export default Layout;
