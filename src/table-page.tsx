@@ -6,6 +6,7 @@ import { Card, CardContent } from "./components/ui/card";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./components/ui/table";
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
+import { ScrollArea } from "./components/ui/scroll-area";
 
 function TablePage() {
     const [courses, setCourses] = useState<CourseGrade[]>([]);
@@ -21,9 +22,12 @@ function TablePage() {
     return (
         <Card className="w-full">
         <CardContent>
-          <Table>
+          
+          <Table className="w-full overflow-y-auto ">
+            <ScrollArea className="h-[80vh]">
             {tableHead}
             <TableBody>
+            
               {courses.map((course) => (
                 <TableRow key={course.getRow()[0]} className="hover:bg-muted/50">
                   <TableCell>
@@ -47,8 +51,11 @@ function TablePage() {
                 
                 </TableRow>
               ))}
+            </TableBody>
               
-              <TableRow className="hover:bg-muted/50">
+            <TableFooter className="relative sticky bottom-0 z-10 bg-card">
+              
+              <TableRow className="hover:bg-muted/0">
                   <TableCell>
                     <Input name="course" placeholder="Course" onChange={(e) => setRow({ ...row, course: e.target.value })} />
                   </TableCell>
@@ -67,7 +74,7 @@ function TablePage() {
 
                   <TableCell className="flex">
                     <Input className="w-2/5" placeholder={"Grade"} onChange={(e) => setRow({ ...row, grade: e.target.value })} />
-                    <Button className="ml-2 w-3/5 text-green-600 hover:text-green-700 hover:bg-green-100 text-center " variant="ghost" size="icon" onClick={() => setCourses((prev) => [...prev, new CourseGrade(row.course, Number(row.scope), row.grade, row.date)])}>
+                    <Button className="ml-2 w-3/5 text-chart-5 hover:text-chart-5/50 text-center " variant="ghost" size="icon" onClick={() => setCourses((prev) => [...prev, new CourseGrade(row.course, Number(row.scope), row.grade, row.date)])}>
                       Add Course
                     </Button>
                   </TableCell>
@@ -76,9 +83,11 @@ function TablePage() {
 
                 
                 </TableRow>
-
-            </TableBody>
+            </TableFooter>
+              </ScrollArea>
           </Table>
+            
+          
           <div className="mt-4 flex gap-4">
             <ProgramSelector setCourseGrades={setCourses} />
             <TranscriptLoader setCourseGrades={setCourses} />
@@ -91,7 +100,7 @@ function TablePage() {
 
 
 const tableHead = (
-  <TableHeader>
+  <TableHeader className="sticky top-0 z-10 bg-card">
     <TableRow>
       <TableHead className="font-semibold">Course</TableHead>
       <TableHead className="font-semibold text-center">CourseCode</TableHead>

@@ -149,7 +149,9 @@ function ProgramSelector({ setCourseGrades }: PropType) {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
+            <DialogClose asChild>
             <Button type="submit">Search</Button>
+            </DialogClose>
           </DialogFooter>
         </form>
       </DialogContent>

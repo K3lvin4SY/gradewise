@@ -1063,7 +1063,7 @@ body {
 html,
 body {
   height: 100%;
-  
+  overflow: hidden; /* Prevents scrolling */
 }
 
 #root {
