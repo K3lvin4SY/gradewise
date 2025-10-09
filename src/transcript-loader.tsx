@@ -112,8 +112,7 @@ async function loadTranscript(file: File): Promise<CourseGrade[]> {
     }>;
 
     return data.map(
-      (course) =>
-        new CourseGrade(course.name, course.scope, course.grade, course.date)
+      (course) => new CourseGrade(course.name, course.scope, course.grade, 2) // fix later
     );
   } catch (error) {
     throw new Error(

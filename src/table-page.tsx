@@ -20,10 +20,12 @@ function TablePage() {
   const [courses, setCourses] = useState<CourseGrade[]>([]);
 
   const [row, setRow] = useState({
+    code: "",
     course: "",
-    scope: "",
+    credits: "",
     grade: "",
-    date: "",
+    year: "",
+    periods: "",
   });
 
   return (
@@ -35,21 +37,28 @@ function TablePage() {
             <TableBody>
               {courses.map((course) => (
                 <TableRow
-                  key={course.getRow()[0]}
+                  key={course.getRow().code}
                   className="hover:bg-muted/50"
                 >
-                  <TableCell>{course.getRow()[0]}</TableCell>
-
-                  <TableCell className="text-center"></TableCell>
-
-                  <TableCell className="text-center">
-                    {course.getRow()[1]}
+                  <TableCell className="text-left">
+                    {course.getRow().code}
                   </TableCell>
-                  <TableCell className="text-center">
-                    {course.getRow()[3]}
+
+                  <TableCell className="text-left">
+                    {course.getRow().name}
+                  </TableCell>
+
+                  <TableCell className="text-left">
+                    {course.getRow().credits}
                   </TableCell>
                   <TableCell className="text-left">
-                    {course.getRow()[2]}
+                    {course.getRow().grade}
+                  </TableCell>
+                  <TableCell className="text-left">
+                    {course.getRow().year}
+                  </TableCell>
+                  <TableCell className="text-left">
+                    {course.getRow().periods.join(", ")}
                   </TableCell>
                 </TableRow>
               ))}
@@ -57,6 +66,10 @@ function TablePage() {
 
             <TableFooter className="relative sticky bottom-0 z-10 bg-card">
               <TableRow className="hover:bg-muted/0">
+                <TableCell>
+                  <Input placeholder={"CourseCode"} />
+                </TableCell>
+
                 <TableCell>
                   <Input
                     name="course"
@@ -66,28 +79,35 @@ function TablePage() {
                 </TableCell>
 
                 <TableCell>
-                  <Input placeholder={"CourseCode"} />
-                </TableCell>
-
-                <TableCell>
                   <Input
-                    placeholder={"Scope"}
-                    onChange={(e) => setRow({ ...row, scope: e.target.value })}
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <Input
-                    placeholder={"Date"}
-                    onChange={(e) => setRow({ ...row, date: e.target.value })}
+                    placeholder={"Credits"}
+                    onChange={(e) =>
+                      setRow({ ...row, credits: e.target.value })
+                    }
                   />
                 </TableCell>
 
                 <TableCell className="flex">
                   <Input
-                    className="w-2/5"
                     placeholder={"Grade"}
                     onChange={(e) => setRow({ ...row, grade: e.target.value })}
+                  />
+                </TableCell>
+
+                <TableCell>
+                  <Input
+                    placeholder={"Year"}
+                    onChange={(e) => setRow({ ...row, year: e.target.value })}
+                  />
+                </TableCell>
+
+                <TableCell>
+                  <Input
+                    placeholder={"Periods"}
+                    className="w-2/5"
+                    onChange={(e) =>
+                      setRow({ ...row, periods: e.target.value })
+                    }
                   />
                   <Button
                     className="ml-2 w-3/5 text-chart-5 hover:text-chart-5/50 text-center "
@@ -98,9 +118,17 @@ function TablePage() {
                         ...prev,
                         new CourseGrade(
                           row.course,
-                          Number(row.scope),
+                          Number(row.credits),
                           row.grade,
-                          row.date
+                          1,
+                          row.code,
+                          Number(row.year),
+                          row.periods
+                            ? row.periods
+                                .split(",")
+                                .map((p) => Number(p.trim()))
+                            : [],
+                          0
                         ),
                       ])
                     }
@@ -125,11 +153,12 @@ function TablePage() {
 const tableHead = (
   <TableHeader className="sticky top-0 z-10 bg-card">
     <TableRow>
+      <TableHead className="font-semibold">CourseCode</TableHead>
       <TableHead className="font-semibold">Course</TableHead>
-      <TableHead className="font-semibold text-center">CourseCode</TableHead>
-      <TableHead className="font-semibold text-center">Scope</TableHead>
-      <TableHead className="font-semibold text-center">Date</TableHead>
-      <TableHead className="font-semibold text-left">Grade</TableHead>
+      <TableHead className="font-semibold">Credits</TableHead>
+      <TableHead className="font-semibold">Grade</TableHead>
+      <TableHead className="font-semibold">Year</TableHead>
+      <TableHead className="font-semibold">Periods</TableHead>
     </TableRow>
   </TableHeader>
 );

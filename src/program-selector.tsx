@@ -79,8 +79,15 @@ function ProgramSelector({ setCourseGrades }: PropType) {
           new CourseGrade(
             course.name_en,
             course.credits,
-            "", // No Grade
-            "" // No Date
+            "",
+            course.gradingScale === "TH" ? 2 : 1,
+            course.courseCode,
+            course.year,
+            Array.from(
+              { length: course.periods },
+              (_, i) => course.startPeriod + i
+            ),
+            course.entryRequirements
           )
       );
   }
@@ -150,7 +157,7 @@ function ProgramSelector({ setCourseGrades }: PropType) {
               <Button variant="outline">Cancel</Button>
             </DialogClose>
             <DialogClose asChild>
-            <Button type="submit">Search</Button>
+              <Button type="submit">Search</Button>
             </DialogClose>
           </DialogFooter>
         </form>
