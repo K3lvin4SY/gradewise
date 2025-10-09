@@ -15,6 +15,7 @@ import {
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
 import { ScrollArea } from "./components/ui/scroll-area";
+import CoursePeriods from "./components/ui/course-periods";
 
 function TablePage() {
   const [courses, setCourses] = useState<CourseGrade[]>([]);
@@ -45,7 +46,11 @@ function TablePage() {
                   </TableCell>
 
                   <TableCell className="text-left">
-                    {course.getRow().name}
+                    <div className="truncate">
+                      {course.getRow().name.length > 50
+                        ? `${course.getRow().name.slice(0, 50)}...`
+                        : course.getRow().name}
+                    </div>
                   </TableCell>
 
                   <TableCell className="text-left">
@@ -58,7 +63,7 @@ function TablePage() {
                     {course.getRow().year}
                   </TableCell>
                   <TableCell className="text-left">
-                    {course.getRow().periods.join(", ")}
+                    <CoursePeriods checkedPeriods={course.getRow().periods} />
                   </TableCell>
                 </TableRow>
               ))}
