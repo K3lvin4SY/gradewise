@@ -69,7 +69,7 @@ function TablePage() {
               ))}
             </TableBody>
 
-            <TableFooter className="relative sticky bottom-0 z-10 bg-card">
+            <TableFooter className="sticky bottom-0 z-10 bg-card">
               <TableRow className="hover:bg-muted/0">
                 <TableCell>
                   <Input placeholder={"CourseCode"} />
