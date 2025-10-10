@@ -16,6 +16,7 @@ import { Button } from "./components/ui/button";
 import { ScrollArea } from "./components/ui/scroll-area";
 import CoursePeriods from "./components/ui/course-periods";
 import { useState, type FormEvent } from "react";
+import { IconRowInsertBottom, IconTrash } from "@tabler/icons-react";
 
 function TablePage() {
   const [courses, setCourses] = useState<CourseGrade[]>([]);
@@ -64,17 +65,17 @@ function TablePage() {
   return (
     <Card className="w-full">
       <CardContent>
-        <Table className="w-full overflow-y-auto ">
-          <ScrollArea className="h-[80vh]">
+        <Table className="w-full overflow-y-auto table-fixed">
+          <ScrollArea className="h-[calc(100vh-210px)] pr-2">
             {tableHead}
             <TableBody>
               {courses.map((course) => (
                 <TableRow key={course.getCode()} className="hover:bg-muted/50">
-                  <TableCell className="text-left w-1/10">
+                  <TableCell className="text-left w-24">
                     {course.getCode()}
                   </TableCell>
 
-                  <TableCell className="text-left w-5/10">
+                  <TableCell className="text-left">
                     <div className="truncate">
                       {course.getName().length > 50
                         ? `${course.getName().slice(0, 50)}...`
@@ -82,31 +83,34 @@ function TablePage() {
                     </div>
                   </TableCell>
 
-                  <TableCell className="text-left w-1/20">
+                  <TableCell className="text-left w-16">
                     {course.getCredits()}
                   </TableCell>
-                  <TableCell className="text-left w-1/10">
+                  <TableCell className="text-left w-24">
                     <Input
                       placeholder={
                         course.getGrade() ? course.getGrade() : "Grade"
                       }
                       onChange={(e) =>
-                        setRow({ ...row, credits: e.target.value })
+                        setRow({
+                          ...row,
+                          credits: e.target.value,
+                        })
                       }
                     ></Input>
                   </TableCell>
-                  <TableCell className="text-left w-1/20">
+                  <TableCell className="text-left w-16">
                     {course.getYear()}
                   </TableCell>
-                  <TableCell className="text-left w-1/10">
+                  <TableCell className="text-left w-24">
                     <CoursePeriods checkedPeriods={course.getPeriods()} />
                   </TableCell>
-                  <TableCell className="text-left w-1/10">
+                  <TableCell className="text-left w-0">
                     <Button
-                      className="w-full bg-destructive"
+                      className="aspect-square bg-destructive"
                       onClick={() => handleDelete(course)}
                     >
-                      Delete
+                      <IconTrash />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -115,14 +119,14 @@ function TablePage() {
 
             <TableFooter className="sticky bottom-0 z-10 bg-card">
               <TableRow className="hover:bg-muted/0">
-                <TableCell className="w-1/10">
+                <TableCell className="w-24">
                   <Input
                     onChange={(e) => setRow({ ...row, code: e.target.value })}
                     placeholder={"CourseCode"}
                   />
                 </TableCell>
 
-                <TableCell className="w-5/10">
+                <TableCell className="">
                   <Input
                     name="course"
                     placeholder="Course"
@@ -130,7 +134,7 @@ function TablePage() {
                   />
                 </TableCell>
 
-                <TableCell className="w-1/20">
+                <TableCell className="w-16">
                   <Input
                     placeholder={"Credits"}
                     onChange={(e) =>
@@ -139,21 +143,21 @@ function TablePage() {
                   />
                 </TableCell>
 
-                <TableCell className="w-1/10">
+                <TableCell className="w-24">
                   <Input
                     placeholder={"Grade"}
                     onChange={(e) => setRow({ ...row, grade: e.target.value })}
                   />
                 </TableCell>
 
-                <TableCell className="w-1/20">
+                <TableCell className="w-16">
                   <Input
                     placeholder={"Year"}
                     onChange={(e) => setRow({ ...row, year: e.target.value })}
                   />
                 </TableCell>
 
-                <TableCell className="w-1/10">
+                <TableCell className="w-24">
                   <Input
                     placeholder={"Periods"}
                     onChange={(e) =>
@@ -161,9 +165,12 @@ function TablePage() {
                     }
                   />
                 </TableCell>
-                <TableCell className="w-1/10">
-                  <Button className="bg-chart-5 w-full" onClick={handleSubmit}>
-                    Add Course
+                <TableCell className="w-10">
+                  <Button
+                    className="aspect-square bg-chart-5"
+                    onClick={handleSubmit}
+                  >
+                    <IconRowInsertBottom />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -194,7 +201,7 @@ function TablePage() {
 
 const tableHead = (
   <TableHeader className="sticky top-0 z-10 bg-card">
-    <TableRow className="hover:bg-muted/0">
+    <TableRow className="hover:bg-muted/0 text-base">
       <TableHead className="font-semibold">CourseCode</TableHead>
       <TableHead className="font-semibold">Course</TableHead>
       <TableHead className="font-semibold">Credits</TableHead>

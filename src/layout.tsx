@@ -22,9 +22,8 @@ function Layout() {
           </div>
         </div>
       </nav>
-      <Outlet context={{ courses, setCourses }} />
-      <div className="flex flex-col items-center justify-center mt-[27vh]">
-        <br />
+      <div className="mx-[2em]">
+        <Outlet context={{ courses, setCourses }} />
       </div>
     </ThemeProvider>
   );
