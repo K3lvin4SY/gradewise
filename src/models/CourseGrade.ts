@@ -37,15 +37,23 @@ class CourseGrade {
     this.entryRequirements = entryRequirements;
   }
 
-  getRow(): CourseRowData {
-    return {
-      code: this.code ? this.code : "",
-      name: this.name,
-      credits: this.credits,
-      grade: this.grade,
-      year: this.year ? this.year : 0,
-      periods: this.periods ? this.periods : [],
-    };
+  getCode(): string {
+    return this.code ? this.code : "";
+  }
+
+  getGrade(): string {
+    return this.grade;
+  }
+  getYear(): number {
+    return this.year ? this.year : 0;
+  }
+
+  getPeriods(): number[] {
+    return this.periods ? this.periods : [];
+  }
+
+  getName(): string {
+    return this.name;
   }
 
   shouldBeGraded(): boolean {
