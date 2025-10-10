@@ -57,7 +57,7 @@ class CourseGrade {
   }
 
   shouldBeGraded(): boolean {
-    return this.gradingScale == 2;
+    return this.gradingScale == 2 && !isNaN(Number(this.grade));
   }
 
   getWeightedGrade(): number {
