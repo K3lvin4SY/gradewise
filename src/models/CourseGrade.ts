@@ -71,11 +71,15 @@ class CourseGrade {
   }
 
   getCredits(): number {
-    return this.shouldBeGraded() ? this.credits : 0;
+    return this.credits ? this.credits : 0;
   }
 
   getEntryRequirements(): number {
     return this.entryRequirements ? this.entryRequirements : 0;
+  }
+
+  getGradingScale(): number {
+    return this.gradingScale;
   }
 }
 

@@ -5,7 +5,7 @@ import { IconFileUpload } from "@tabler/icons-react";
 import { useRef, useState } from "react";
 
 interface PropType {
-  setCourseGrades: (grades: CourseGrade[]) => void;
+  setCourseGrades: React.Dispatch<React.SetStateAction<CourseGrade[]>>;
 }
 
 /**
@@ -36,9 +36,33 @@ function TranscriptLoader({ setCourseGrades }: PropType) {
 
     setIsLoading(true);
     try {
-      const courseGrades = await loadTranscript(file);
-      console.log("Transcript loaded successfully:", courseGrades);
-      setCourseGrades(courseGrades);
+      const importedCourseGrades = await loadTranscript(file);
+      console.log("Transcript loaded successfully:", importedCourseGrades);
+      setCourseGrades((courseGrades) => {
+        return [
+          ...courseGrades.map((cg) => {
+            const icg = importedCourseGrades.find(
+              (icg) => icg.getCode() === cg.getCode()
+            );
+            if (icg) {
+              return new CourseGrade(
+                cg.getName(),
+                cg.getCredits(),
+                icg.getGrade(),
+                cg.getGradingScale(),
+                cg.getCode(),
+                cg.getYear(),
+                cg.getPeriods(),
+                cg.getEntryRequirements()
+              );
+            }
+            return cg;
+          }),
+          ...importedCourseGrades.filter(
+            (icg) => !courseGrades.find((cg) => cg.getCode() === icg.getCode())
+          ),
+        ];
+      });
     } catch (error) {
       console.error("Failed to load transcript:", error);
       alert(
@@ -92,7 +116,7 @@ async function loadTranscript(file: File): Promise<CourseGrade[]> {
     formData.append("file", file);
 
     const response = await fetch(
-      "https://lectra.donkare.se/api/parse-transcript",
+      "https://4000.dev.donkare.se/api/parse-transcript",
       {
         method: "POST",
         body: formData,
@@ -105,14 +129,22 @@ async function loadTranscript(file: File): Promise<CourseGrade[]> {
 
     const parsedResponse = await response.json();
     const data = parsedResponse.data as Array<{
+      code: string;
       name: string;
-      scope: number;
+      credits: number;
       grade: string;
-      date: string;
+      gradingScale: number;
     }>;
 
     return data.map(
-      (course) => new CourseGrade(course.name, course.scope, course.grade, 2) // fix later
+      (course) =>
+        new CourseGrade(
+          course.name,
+          course.credits,
+          course.grade,
+          course.gradingScale,
+          course.code
+        )
     );
   } catch (error) {
     throw new Error(
