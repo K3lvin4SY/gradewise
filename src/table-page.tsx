@@ -183,15 +183,16 @@ function TablePage() {
           <TranscriptLoader setCourseGrades={setCourses} />
           <span>
             Average Grade:{" "}
-            {/*(
+            {(
               courses
+                .filter((course) => course.shouldBeGraded())
                 .map((course) => course.getWeightedGrade())
                 .reduce((a, b) => a + b, 0) /
               courses
+                .filter((course) => course.shouldBeGraded())
                 .map((course) => course.getCredits())
                 .reduce((a, b) => a + b, 0)
-            ) // finish this later
-              .toFixed(2)*/}
+            ).toFixed(2)}
           </span>
         </div>
       </CardContent>
