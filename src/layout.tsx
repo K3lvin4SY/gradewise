@@ -1,13 +1,32 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { ThemeProvider } from "./components/theme/theme-provider";
 import { ThemeToggle } from "./components/theme/theme-toggle";
 import { ThemeChooser } from "./components/theme/theme-chooser";
-import type { CourseGrade } from "./models/CourseGrade";
+import { CourseGrade } from "./models/CourseGrade";
 import { Link, Outlet } from "react-router-dom";
 
 function Layout() {
-  const [courses, setCourses] = useState<CourseGrade[]>([]);
+  const [courses, setCoursesState] = useState<CourseGrade[]>(() => {
+    const courseGradeData = window.sessionStorage.getItem("courses");
+    if (!courseGradeData) return [];
+    try {
+      return CourseGrade.parse(courseGradeData);
+    } catch (error) {
+      console.warn(
+        "Failed to parse course grade data from localStorage:",
+        error
+      );
+      return [];
+    }
+  });
+
+  const setCourses: React.Dispatch<React.SetStateAction<CourseGrade[]>> = (
+    courses
+  ) => {
+    window.sessionStorage.setItem("courses", JSON.stringify(courses));
+    setCoursesState(courses);
+  };
 
   return (
     <ThemeProvider>

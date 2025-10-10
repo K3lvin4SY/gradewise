@@ -81,6 +81,27 @@ class CourseGrade {
   getGradingScale(): number {
     return this.gradingScale;
   }
+
+  static parse(courseGradeData: string): CourseGrade[] {
+    try {
+      const data = JSON.parse(courseGradeData);
+      return data.map((item: any) => {
+        return new CourseGrade(
+          item.name,
+          item.credits,
+          item.grade,
+          item.gradingScale,
+          item.code,
+          item.year,
+          item.periods,
+          item.entryRequirements
+        );
+      });
+    } catch (error) {
+      console.error("Failed to parse course grade data:", error);
+      return [];
+    }
+  }
 }
 
 export { CourseGrade };

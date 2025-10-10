@@ -22,9 +22,15 @@ import {
   IconEraser,
 } from "@tabler/icons-react";
 import AverageGrade from "./average-grade";
+import { useOutletContext } from "react-router-dom";
+
+type OutletContext = {
+  courses: CourseGrade[];
+  setCourses: React.Dispatch<React.SetStateAction<CourseGrade[]>>;
+};
 
 function TablePage() {
-  const [courses, setCourses] = useState<CourseGrade[]>([]);
+  const { courses, setCourses } = useOutletContext<OutletContext>();
 
   const [row, setRow] = useState({
     code: "",
