@@ -29,14 +29,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "./components/ui/tooltip";
+import { InputSearch } from "./input-search";
 
 type OutletContext = {
   courses: CourseGrade[];
   setCourses: React.Dispatch<React.SetStateAction<CourseGrade[]>>;
+  lthCourses: CourseGrade[];
 };
 
 function TablePage() {
-  const { courses, setCourses } = useOutletContext<OutletContext>();
+  const { courses, setCourses, lthCourses } = useOutletContext<OutletContext>();
 
   const [row, setRow] = useState({
     code: "",

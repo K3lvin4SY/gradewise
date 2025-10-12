@@ -107,7 +107,7 @@ function Layout() {
         </div>
       </nav>
       <div className="mx-[2em]">
-        <Outlet context={{ courses, setCourses }} />
+        <Outlet context={{ courses, setCourses, lthCourses }} />
       </div>
     </ThemeProvider>
   );
