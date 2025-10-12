@@ -108,6 +108,7 @@ export function InputSearch({
 
       <PopoverContent
         className="w-100 p-0"
+        side="top"
         align="start"
         sideOffset={4}
         onOpenAutoFocus={(e) => e.preventDefault()}
