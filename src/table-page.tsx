@@ -20,9 +20,15 @@ import {
   IconRowInsertBottom,
   IconTrash,
   IconEraser,
+  IconAlertCircle,
 } from "@tabler/icons-react";
 import AverageGrade from "./average-grade";
 import { useOutletContext } from "react-router-dom";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "./components/ui/tooltip";
 
 type OutletContext = {
   courses: CourseGrade[];
@@ -88,11 +94,48 @@ function TablePage() {
                     className="hover:bg-muted/50"
                   >
                     <TableCell className="text-center w-24">
-                      {course.getCode()}
+                      <div className="flex items-center gap-1">
+                        {course.getCode()}
+                        {course.getEntryRequirements() > 0 && (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <IconAlertCircle className="w-[1.1em] h-[1.1em] text-amber-600 hover:scale-105" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <h1 className="text-lg font-bold text-amber-700">
+                                Warning
+                              </h1>
+                              <p>
+                                This course has {course.getEntryRequirements()}{" "}
+                                entry requirements.
+                              </p>
+                              <p>
+                                Please make sure you meet these requirements
+                                before enrolling.
+                              </p>
+                              <p>
+                                You can find more information about the
+                                requirements in the course's{" "}
+                                <a
+                                  href={course.getWebsite()}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="underline hover:underline-offset-2 text-blue-600"
+                                >
+                                  website
+                                </a>
+                                .
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
+                      </div>
                     </TableCell>
 
                     <TableCell className="text-left">
-                      <div className="truncate">{course.getName()}</div>
+                      <div className="flex items-center gap-1">
+                        <div className="truncate">{course.getName()}</div>
+                      </div>
                     </TableCell>
 
                     <TableCell className="text-center w-22">

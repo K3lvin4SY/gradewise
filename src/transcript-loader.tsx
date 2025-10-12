@@ -53,7 +53,8 @@ function TranscriptLoader({ setCourseGrades }: PropType) {
                 cg.getCode(),
                 cg.getYear(),
                 cg.getPeriods(),
-                cg.getEntryRequirements()
+                cg.getEntryRequirements(),
+                cg.getWebsite()
               );
             }
             return cg;

@@ -87,7 +87,8 @@ function ProgramSelector({ setCourseGrades }: PropType) {
               { length: course.periods },
               (_, i) => course.startPeriod + i
             ),
-            course.entryRequirements
+            course.entryRequirements,
+            course.homePage_en
           )
       );
   }

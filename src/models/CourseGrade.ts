@@ -16,6 +16,7 @@ class CourseGrade {
   private readonly year?: number;
   private readonly periods?: number[];
   private readonly entryRequirements?: number;
+  private readonly website?: string;
 
   constructor(
     name: string,
@@ -25,7 +26,8 @@ class CourseGrade {
     code?: string,
     year?: number,
     periods?: number[],
-    entryRequirements?: number
+    entryRequirements?: number,
+    website?: string
   ) {
     this.name = name;
     this.credits = credits;
@@ -35,6 +37,7 @@ class CourseGrade {
     this.year = year;
     this.periods = periods;
     this.entryRequirements = entryRequirements;
+    this.website = website;
   }
 
   getCode(): string {
@@ -57,7 +60,11 @@ class CourseGrade {
   }
 
   shouldBeGraded(): boolean {
-    return this.gradingScale == 2 && !isNaN(Number(this.grade));
+    return (
+      this.gradingScale == 2 &&
+      !isNaN(Number(this.grade)) &&
+      Number(this.grade) !== 0
+    );
   }
 
   getWeightedGrade(): number {
@@ -82,6 +89,10 @@ class CourseGrade {
     return this.gradingScale;
   }
 
+  getWebsite(): string | undefined {
+    return this.website;
+  }
+
   static parse(courseGradeData: string): CourseGrade[] {
     try {
       const data = JSON.parse(courseGradeData);
@@ -94,7 +105,8 @@ class CourseGrade {
           item.code,
           item.year,
           item.periods,
-          item.entryRequirements
+          item.entryRequirements,
+          item.website
         );
       });
     } catch (error) {
