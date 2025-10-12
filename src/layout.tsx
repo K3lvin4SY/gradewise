@@ -9,7 +9,9 @@ import { Button } from "./components/ui/button";
 import { NavBar } from "./nav-bar";
 
 async function getLthCourses(): Promise<CourseGrade[]> {
-  const response = await fetch("https://api.lth.lu.se/lot/courses");
+  const response = await fetch(
+    "https://api.lth.lu.se/lot/courses?programmeCode=C&academicYearId=23_24"
+  );
   if (!response.ok) {
     throw new Error("Failed to fetch LTH courses");
   }

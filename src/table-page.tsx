@@ -39,6 +39,9 @@ type OutletContext = {
 
 function TablePage() {
   const { courses, setCourses, lthCourses } = useOutletContext<OutletContext>();
+  const [selectedCourseName, setSelectedCourseName] = useState<
+    string | CourseGrade
+  >("");
 
   const [row, setRow] = useState({
     code: "",
@@ -189,11 +192,17 @@ function TablePage() {
                 </TableCell>
 
                 <TableCell>
-                  <Input
+                  {/*<Input
                     name="course"
                     value={row.course}
                     placeholder="Course"
                     onChange={(e) => setRow({ ...row, course: e.target.value })}
+                  />*/}
+                  <InputSearch
+                    courses={lthCourses}
+                    value={selectedCourseName}
+                    onValueChange={setSelectedCourseName}
+                    placeholder="Type or select a course..."
                   />
                 </TableCell>
 
