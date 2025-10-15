@@ -120,39 +120,43 @@ function TablePage() {
                     <TableCell className="text-center w-24">
                       <div className="flex items-center gap-1">
                         {course.getCode()}
-                        {course.getEntryRequirements() > 0 && (
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <IconAlertCircle className="w-[1.1em] h-[1.1em] text-amber-600 hover:scale-105" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <h1 className="text-lg font-bold text-amber-700">
-                                Warning
-                              </h1>
-                              <p>
-                                This course has {course.getEntryRequirements()}{" "}
-                                entry requirements.
-                              </p>
-                              <p>
-                                Please make sure you meet these requirements
-                                before enrolling.
-                              </p>
-                              <p>
-                                You can find more information about the
-                                requirements in the course's{" "}
-                                <a
-                                  href={course.getWebsite()}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="underline hover:underline-offset-2 text-blue-600"
-                                >
-                                  website
-                                </a>
-                                .
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        )}
+                        {course.getEntryRequirements() > 0 &&
+                          !["G", "3", "4", "5"].includes(
+                            course.getGrade().toUpperCase()
+                          ) && (
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <IconAlertCircle className="w-[1.1em] h-[1.1em] text-amber-600 hover:scale-105" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <h1 className="text-lg font-bold text-amber-700">
+                                  Warning
+                                </h1>
+                                <p>
+                                  This course has{" "}
+                                  {course.getEntryRequirements()} entry
+                                  requirements.
+                                </p>
+                                <p>
+                                  Please make sure you meet these requirements
+                                  before enrolling.
+                                </p>
+                                <p>
+                                  You can find more information about the
+                                  requirements in the course's{" "}
+                                  <a
+                                    href={course.getWebsite()}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="underline hover:underline-offset-2 text-blue-600"
+                                  >
+                                    website
+                                  </a>
+                                  .
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
                       </div>
                     </TableCell>
 
