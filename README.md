@@ -54,7 +54,7 @@ If a course has any reqirements, a waring will be displayed along with a link to
 ```
 
 2. **Open your browser**
-   Navigate to `http://localhost:3000` to view the application
+   Navigate to `http://localhost:5173` to view the application
 
 ### Build & Deployment
 
