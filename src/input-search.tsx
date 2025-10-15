@@ -22,6 +22,15 @@ interface InputSearchProps {
   value?: string | CourseGrade;
   onValueChange?: (value: string | CourseGrade) => void;
   placeholder?: string;
+  setRow: React.Dispatch<
+    React.SetStateAction<{
+      code: string;
+      credits: string;
+      grade: string;
+      year: string;
+      periods: string;
+    }>
+  >;
 }
 
 export function InputSearch({
@@ -29,6 +38,7 @@ export function InputSearch({
   value,
   onValueChange,
   placeholder = "Search courses...",
+  setRow,
 }: InputSearchProps) {
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState("");
@@ -62,6 +72,13 @@ export function InputSearch({
 
     if (matchingCourse) {
       onValueChange?.(matchingCourse); // Select the matching course
+      setRow({
+        code: matchingCourse.getCode(),
+        credits: matchingCourse.getCredits().toString(),
+        grade: "",
+        year: matchingCourse.getYear().toString(),
+        periods: matchingCourse.getPeriods().join(", "),
+      });
     } else {
       onValueChange?.(newValue); // Just set the string value (manual course name)
     }
@@ -75,6 +92,13 @@ export function InputSearch({
     if (selectedCourse) {
       onValueChange?.(selectedCourse);
       setInputValue(selectedCourse.getName());
+      setRow({
+        code: selectedCourse.getCode(),
+        credits: selectedCourse.getCredits().toString(),
+        grade: "",
+        year: selectedCourse.getYear().toString(),
+        periods: selectedCourse.getPeriods().join(", "),
+      });
     }
     setOpen(false); // close the popover
   };
@@ -126,11 +150,19 @@ export function InputSearch({
                     course
                       .getName()
                       .toLowerCase()
-                      .includes(inputValue.toLowerCase()) ||
+                      .includes(
+                        typeof value === "string"
+                          ? value.toLowerCase()
+                          : inputValue.toLowerCase()
+                      ) ||
                     course
                       .getCode()
                       .toLowerCase()
-                      .includes(inputValue.toLowerCase())
+                      .includes(
+                        typeof value === "string"
+                          ? value.toLowerCase()
+                          : inputValue.toLowerCase()
+                      )
                 )
                 .map((course) => {
                   const selectedCourse = getSelectedCourse();

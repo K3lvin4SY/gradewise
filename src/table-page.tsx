@@ -29,7 +29,6 @@ import {
   TooltipTrigger,
 } from "./components/ui/tooltip";
 import { InputSearch } from "./input-search";
-import { Alert } from "./components/ui/alert";
 
 type OutletContext = {
   courses: CourseGrade[];
@@ -105,8 +104,6 @@ function TablePage() {
   }
 
   function handleNewGrade(course: CourseGrade, grade: string) {
-    //handleDelete(course);
-
     setCourses((prev) =>
       prev.map((c) => {
         if (c.getCode() !== course.getCode()) {
@@ -126,21 +123,6 @@ function TablePage() {
         }
       })
     );
-    /*
-    setCourses((prev) => [
-      ...prev,
-      new CourseGrade(
-        course.getName(),
-        course.getCredits(),
-        grade,
-        course.getGradingScale(),
-        course.getCode(),
-        course.getYear(),
-        course.getPeriods(),
-        course.getEntryRequirements(),
-        course.getWebsite()
-      ),
-    ]); */
   }
 
   return (
@@ -216,10 +198,11 @@ function TablePage() {
                         }
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
-                            setRow({ ...row, grade: e.currentTarget.value });
-                            handleNewGrade(course, e.currentTarget.value);
                             e.currentTarget.blur();
                           }
+                        }}
+                        onBlur={(e) => {
+                          handleNewGrade(course, e.currentTarget.value);
                         }}
                       />
                     </TableCell>
@@ -261,6 +244,7 @@ function TablePage() {
                     value={selectedCourseName}
                     onValueChange={setSelectedCourseName}
                     placeholder="Type or select a course..."
+                    setRow={setRow}
                   />
                 </TableCell>
 
