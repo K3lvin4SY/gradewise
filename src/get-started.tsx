@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import SplitText from "./components/animated/SplitText";
 import { Button } from "./components/ui/button";
 import { Link, useOutletContext } from "react-router-dom";

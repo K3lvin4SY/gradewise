@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Button } from "./components/ui/button";
-import { IconSearch } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -15,14 +14,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CheckIcon, ChevronsUpDownIcon, Search } from "lucide-react";
-import { Label } from "@radix-ui/react-label";
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { CourseGrade } from "./models/CourseGrade";
 import { ScrollArea } from "./components/ui/scroll-area";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,

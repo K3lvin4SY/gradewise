@@ -1,5 +1,4 @@
 import { CourseGrade } from "./models/CourseGrade";
-import ProgramSelector from "./program-selector";
 import TranscriptLoader from "./transcript-loader";
 import { Card, CardContent } from "./components/ui/card";
 import {
@@ -43,14 +42,7 @@ type OutletContext = {
 };
 
 function TablePage() {
-  const {
-    courses,
-    setCourses,
-    lthCourses,
-    setLthCourses,
-    setSelectedProgram,
-    setSelectedYear,
-  } = useOutletContext<OutletContext>();
+  const { courses, setCourses, lthCourses } = useOutletContext<OutletContext>();
   const { program, year } = useParams<{ program?: string; year?: string }>();
   const [selectedCourseName, setSelectedCourseName] = useState<
     string | CourseGrade

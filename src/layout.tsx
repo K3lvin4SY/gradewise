@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { ThemeProvider } from "./components/theme/theme-provider";
 import { ThemeToggle } from "./components/theme/theme-toggle";
