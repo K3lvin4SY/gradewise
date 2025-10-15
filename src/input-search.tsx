@@ -53,6 +53,7 @@ export function InputSearch({
     );
   };
 
+  // Handles input changes in the course name. If the name is a perfect match of a course, it selects that course. Otherwise its just the string and it will be a manual course name.
   const handleInputChange = (newValue: string) => {
     setInputValue(newValue);
 
@@ -61,12 +62,13 @@ export function InputSearch({
     );
 
     if (matchingCourse) {
-      onValueChange?.(matchingCourse);
+      onValueChange?.(matchingCourse); // Select the matching course
     } else {
-      onValueChange?.(newValue);
+      onValueChange?.(newValue); // Just set the string value (manual course name)
     }
   };
 
+  // Handles selection when a course is clicked from the popover command list.
   const handleSelectCourse = (courseCode: string) => {
     const selectedCourse = courses.find(
       (course) => course.getCode() === courseCode
@@ -75,13 +77,15 @@ export function InputSearch({
       onValueChange?.(selectedCourse);
       setInputValue(selectedCourse.getName());
     }
-    setOpen(false);
+    setOpen(false); // close the popover
   };
 
+  // Open the popover when input is on focus
   const handleInputFocus = () => {
     setOpen(true);
   };
 
+  // Close the popover when input is on blur (unfocused)
   const handleInputBlur = (e: React.FocusEvent) => {
     if (!e.relatedTarget?.closest('[role="listbox"]')) {
       setOpen(false);
