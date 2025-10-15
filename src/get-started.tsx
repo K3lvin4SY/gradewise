@@ -6,13 +6,10 @@ import { Link, useOutletContext } from "react-router-dom";
 type OutletContext = {
   selectedProgram: string;
   selectedYear: string;
-  selectedProgramOld: string;
-  selectedYearOld: string;
 };
 
 function GetStarted() {
-  const { selectedProgram, selectedYear, selectedProgramOld, selectedYearOld } =
-    useOutletContext<OutletContext>();
+  const { selectedProgram, selectedYear } = useOutletContext<OutletContext>();
 
   const welcomeMessages = [
     "Welcome, academic achiever!",
@@ -76,10 +73,7 @@ function GetStarted() {
       <Button asChild className="py-4 px-8 text-lg font-bold rounded-lg ">
         <Link
           to={
-            selectedProgram === "" &&
-            selectedYear === "" &&
-            selectedProgramOld === "" &&
-            selectedYearOld === ""
+            selectedProgram === "" && selectedYear === ""
               ? "/program-selector"
               : "/table-page"
           }

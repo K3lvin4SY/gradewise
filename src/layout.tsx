@@ -29,12 +29,6 @@ function Layout() {
   const [selectedYear, setSelectedYearState] = useState<string>(
     window.sessionStorage.getItem("selectedYear") || ""
   );
-  const [selectedProgramOld, setSelectedProgramOld] = useState<string>(
-    window.sessionStorage.getItem("selectedProgram") || ""
-  );
-  const [selectedYearOld, setSelectedYearOld] = useState<string>(
-    window.sessionStorage.getItem("selectedYear") || ""
-  );
 
   if (
     selectedProgram !== "" &&
@@ -100,12 +94,6 @@ function Layout() {
           <NavBar
             selectedProgram={selectedProgram}
             selectedYear={selectedYear}
-            selectedProgramOld={selectedProgramOld}
-            selectedYearOld={selectedYearOld}
-            setSelectedProgramOld={setSelectedProgramOld}
-            setSelectedYearOld={setSelectedYearOld}
-            setSelectedProgram={setSelectedProgram}
-            setSelectedYear={setSelectedYear}
           />{" "}
           {/* remove later? */}
           <div className="mr-4 flex gap-2">
@@ -125,8 +113,6 @@ function Layout() {
             setSelectedYear,
             selectedProgram,
             setSelectedProgram,
-            selectedProgramOld,
-            selectedYearOld,
           }}
         />
       </div>

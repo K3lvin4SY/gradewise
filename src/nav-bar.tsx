@@ -11,74 +11,52 @@ import {
 export function NavBar({
   selectedProgram,
   selectedYear,
-  setSelectedProgram,
-  setSelectedYear,
-  selectedProgramOld,
-  selectedYearOld,
-  setSelectedProgramOld,
-  setSelectedYearOld,
 }: {
   selectedProgram: string;
   selectedYear: string;
-  setSelectedProgram: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedYear: React.Dispatch<React.SetStateAction<string>>;
-  selectedProgramOld: string;
-  selectedYearOld: string;
-  setSelectedProgramOld: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedYearOld: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
-    <NavigationMenu viewport={true}>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link to="/">Welcome</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link
-              to="/program-selector"
-              onClick={() => {
-                setSelectedProgramOld(
-                  selectedProgram ? selectedProgram : selectedProgramOld
-                );
-                setSelectedYearOld(
-                  selectedYear ? selectedYear : selectedYearOld
-                );
-                setSelectedProgram("");
-                setSelectedYear("");
-              }}
+    <>
+      <NavigationMenu viewport={true}>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              asChild
+              className={navigationMenuTriggerStyle()}
             >
-              Select Program
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link
-              to={
-                selectedProgram === "" &&
-                selectedYear === "" &&
-                selectedProgramOld == "" &&
-                selectedYearOld == ""
-                  ? "/program-selector"
-                  : "/table-page"
-              }
-              onClick={() => {
-                if (selectedProgram === "" && selectedYear === "") {
-                  setSelectedProgram(selectedProgramOld);
-                  setSelectedYear(selectedYearOld);
+              <Link to="/">Welcome</Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              asChild
+              className={navigationMenuTriggerStyle()}
+            >
+              <Link to="/program-selector">Select Program</Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              asChild
+              className={navigationMenuTriggerStyle()}
+            >
+              <Link
+                to={
+                  selectedProgram === "" && selectedYear === ""
+                    ? "/program-selector"
+                    : "/table-page"
                 }
-                setSelectedProgramOld("");
-                setSelectedYearOld("");
-              }}
-            >
-              Analyze Courses
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+              >
+                Analyze Courses
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+      <p className="hidden">
+        sp:{selectedProgram}
+        sy:{selectedYear}
+      </p>
+    </>
   );
 }
