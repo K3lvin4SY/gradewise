@@ -121,7 +121,7 @@ async function loadTranscript(file: File): Promise<CourseGrade[]> {
     formData.append("file", file);
 
     const response = await fetch(
-      "https://4000.dev.donkare.se/api/parse-transcript",
+      "https://gradewise.donkare.se/api/parse-transcript",
       {
         method: "POST",
         body: formData,
