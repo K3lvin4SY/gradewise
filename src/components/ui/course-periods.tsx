@@ -21,7 +21,7 @@ const CoursePeriods: React.FC<CoursePeriods> = ({ checkedPeriods }) => {
               ${
                 isChecked
                   ? "bg-primary text-primary-foreground border-solid border-primary"
-                  : "bg-transparent text-primary-foreground border-border"
+                  : "bg-transparent text-base-foreground border-border"
               }
             `}
           >
