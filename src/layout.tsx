@@ -6,6 +6,7 @@ import { ThemeChooser } from "./components/theme/theme-chooser";
 import { CourseGrade } from "./models/CourseGrade";
 import { Link, Outlet } from "react-router-dom";
 import { NavBar } from "./nav-bar";
+import { parseLthProgramData } from "./program-selector";
 
 function Layout() {
   const [lthCourses, setLthCourses] = useState<CourseGrade[]>([]);
@@ -34,6 +35,24 @@ function Layout() {
   const [selectedYearOld, setSelectedYearOld] = useState<string>(
     window.sessionStorage.getItem("selectedYear") || ""
   );
+
+  if (
+    selectedProgram !== "" &&
+    selectedYear !== "" &&
+    lthCourses.length === 0
+  ) {
+    fetch(
+      `https://api.lth.lu.se/lot/courses?programmeCode=${selectedProgram}&academicYearId=${selectedYear}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const lthGrades = parseLthProgramData(data);
+        setLthCourses(lthGrades);
+      })
+      .catch((error) => {
+        console.error("Error fetching lthCourses:", error);
+      });
+  }
 
   const setSelectedProgram: React.Dispatch<React.SetStateAction<string>> = (
     programOrUpdater

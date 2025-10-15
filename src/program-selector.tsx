@@ -40,6 +40,69 @@ type OutletContext = {
   setSelectedYear: React.Dispatch<React.SetStateAction<string>>;
 };
 
+function parseLthProgramData(courseData: any[]): CourseGrade[] {
+  return courseData
+    .map((course) => {
+      const periods = course.timePlans[0]?.studyPeriods.filter(
+        (item: null | any) => item !== null
+      ).length;
+      const startPeriod = course.timePlans[0]?.studyPeriods.findIndex(
+        (item: null | any) => item !== null
+      );
+      return { ...course, periods, startPeriod };
+    })
+    .map(
+      (course: any) =>
+        new CourseGrade(
+          course.name_en,
+          course.credits,
+          "",
+          course.gradingScale === "TH" ? 2 : 1,
+          course.courseCode,
+          course.year,
+          Array.from(
+            { length: course.periods },
+            (_, i) => course.startPeriod + i
+          ),
+          course.entryRequirements
+        )
+    );
+}
+
+function parseProgramData(data: any[]): CourseGrade[] {
+  return data
+    .filter((course) => course.choice === "mandatory")
+    .map((course) => {
+      const periods = course.timePlans[0]?.studyPeriods.filter(
+        (item: null | any) => item !== null
+      ).length;
+      const startPeriod = course.timePlans[0]?.studyPeriods.findIndex(
+        (item: null | any) => item !== null
+      );
+      return { ...course, periods, startPeriod };
+    })
+    .sort((a, b) => a.periods - b.periods)
+    .sort((a, b) => a.startPeriod - b.startPeriod)
+    .sort((a, b) => a.year - b.year)
+    .map(
+      (course: any) =>
+        new CourseGrade(
+          course.name_en,
+          course.credits,
+          "",
+          course.gradingScale === "TH" ? 2 : 1,
+          course.courseCode,
+          course.year,
+          Array.from(
+            { length: course.periods },
+            (_, i) => course.startPeriod + i
+          ),
+          course.entryRequirements,
+          course.homePage_en
+        )
+    );
+}
+
 function ProgramSelector() {
   const { setCourses, setLthCourses, setSelectedProgram, setSelectedYear } =
     useOutletContext<OutletContext>();
@@ -51,69 +114,6 @@ function ProgramSelector() {
   const [year, setYear] = useState<string | undefined>(undefined);
 
   const navigate = useNavigate();
-
-  function parseLthProgramData(courseData: any[]): CourseGrade[] {
-    return courseData
-      .map((course) => {
-        const periods = course.timePlans[0]?.studyPeriods.filter(
-          (item: null | any) => item !== null
-        ).length;
-        const startPeriod = course.timePlans[0]?.studyPeriods.findIndex(
-          (item: null | any) => item !== null
-        );
-        return { ...course, periods, startPeriod };
-      })
-      .map(
-        (course: any) =>
-          new CourseGrade(
-            course.name_en,
-            course.credits,
-            "",
-            course.gradingScale === "TH" ? 2 : 1,
-            course.courseCode,
-            course.year,
-            Array.from(
-              { length: course.periods },
-              (_, i) => course.startPeriod + i
-            ),
-            course.entryRequirements
-          )
-      );
-  }
-
-  function parseProgramData(data: any[]): CourseGrade[] {
-    return data
-      .filter((course) => course.choice === "mandatory")
-      .map((course) => {
-        const periods = course.timePlans[0]?.studyPeriods.filter(
-          (item: null | any) => item !== null
-        ).length;
-        const startPeriod = course.timePlans[0]?.studyPeriods.findIndex(
-          (item: null | any) => item !== null
-        );
-        return { ...course, periods, startPeriod };
-      })
-      .sort((a, b) => a.periods - b.periods)
-      .sort((a, b) => a.startPeriod - b.startPeriod)
-      .sort((a, b) => a.year - b.year)
-      .map(
-        (course: any) =>
-          new CourseGrade(
-            course.name_en,
-            course.credits,
-            "",
-            course.gradingScale === "TH" ? 2 : 1,
-            course.courseCode,
-            course.year,
-            Array.from(
-              { length: course.periods },
-              (_, i) => course.startPeriod + i
-            ),
-            course.entryRequirements,
-            course.homePage_en
-          )
-      );
-  }
 
   function handleSelect(event: React.FormEvent) {
     event.preventDefault();
@@ -210,6 +210,7 @@ function ProgramSelector() {
 }
 
 export default ProgramSelector;
+export { parseLthProgramData };
 
 type ComboBoxType = {
   options: Option[];
