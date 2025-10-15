@@ -15,7 +15,7 @@ import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
 import { ScrollArea } from "./components/ui/scroll-area";
 import CoursePeriods from "./components/ui/course-periods";
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import {
   IconRowInsertBottom,
   IconTrash,
@@ -23,7 +23,7 @@ import {
   IconAlertCircle,
 } from "@tabler/icons-react";
 import AverageGrade from "./average-grade";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import {
   Tooltip,
   TooltipContent,
@@ -48,61 +48,48 @@ function TablePage() {
     setCourses,
     lthCourses,
     setLthCourses,
+    selectedProgram,
     setSelectedProgram,
+    selectedYear,
     setSelectedYear,
   } = useOutletContext<OutletContext>();
-  const { program, year } = useParams<{ program?: string; year?: string }>();
   const [selectedCourseName, setSelectedCourseName] = useState<
     string | CourseGrade
   >("");
 
   const [row, setRow] = useState({
     code: "",
+    course: "",
     credits: "",
     grade: "",
     year: "",
     periods: "",
   });
 
-  useEffect(() => {}, [program, year]);
-
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setCourses((prev) => [
       ...prev,
-      selectedCourseName instanceof CourseGrade
-        ? new CourseGrade(
-            selectedCourseName.getName(),
-            selectedCourseName.getCredits(),
-            row.grade,
-            selectedCourseName.getGradingScale(),
-            selectedCourseName.getCode(),
-            selectedCourseName.getYear(),
-            selectedCourseName.getPeriods(),
-            selectedCourseName.getEntryRequirements()
-          )
-        : new CourseGrade(
-            selectedCourseName,
-            Number(row.credits),
-            row.grade,
-            2,
-            row.code,
-            Number(row.year),
-            row.periods
-              ? row.periods.split(",").map((p) => Number(p.trim()) - 1)
-              : [],
-            0
-          ),
+      new CourseGrade(
+        row.course,
+        Number(row.credits),
+        row.grade,
+        2,
+        row.code,
+        Number(row.year),
+        row.periods ? row.periods.split(",").map((p) => Number(p.trim())) : [],
+        0
+      ),
     ]);
 
     setRow({
       code: "",
+      course: "",
       credits: "",
       grade: "",
       year: "",
       periods: "",
     });
-    setSelectedCourseName("");
   }
 
   function handleDelete(course: CourseGrade) {

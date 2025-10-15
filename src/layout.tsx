@@ -5,44 +5,7 @@ import { ThemeToggle } from "./components/theme/theme-toggle";
 import { ThemeChooser } from "./components/theme/theme-chooser";
 import { CourseGrade } from "./models/CourseGrade";
 import { Link, Outlet } from "react-router-dom";
-import { Button } from "./components/ui/button";
 import { NavBar } from "./nav-bar";
-
-async function getLthCourses(): Promise<CourseGrade[]> {
-  const response = await fetch(
-    "https://api.lth.lu.se/lot/courses?programmeCode=C&academicYearId=23_24"
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch LTH courses");
-  }
-  const courseData: any[] = await response.json();
-  return courseData
-    .map((course) => {
-      const periods = course.timePlans[0]?.studyPeriods.filter(
-        (item: null | any) => item !== null
-      ).length;
-      const startPeriod = course.timePlans[0]?.studyPeriods.findIndex(
-        (item: null | any) => item !== null
-      );
-      return { ...course, periods, startPeriod };
-    })
-    .map(
-      (course: any) =>
-        new CourseGrade(
-          course.name_en,
-          course.credits,
-          "",
-          course.gradingScale === "TH" ? 2 : 1,
-          course.courseCode,
-          course.year,
-          Array.from(
-            { length: course.periods },
-            (_, i) => course.startPeriod + i
-          ),
-          course.entryRequirements
-        )
-    );
-}
 
 function Layout() {
   const [lthCourses, setLthCourses] = useState<CourseGrade[]>([]);
@@ -59,14 +22,42 @@ function Layout() {
       return [];
     }
   });
+  const [selectedProgram, setSelectedProgramState] = useState<string>(
+    window.sessionStorage.getItem("selectedProgram") || ""
+  );
+  const [selectedYear, setSelectedYearState] = useState<string>(
+    window.sessionStorage.getItem("selectedYear") || ""
+  );
+  const [selectedProgramOld, setSelectedProgramOld] = useState<string>(
+    window.sessionStorage.getItem("selectedProgram") || ""
+  );
+  const [selectedYearOld, setSelectedYearOld] = useState<string>(
+    window.sessionStorage.getItem("selectedYear") || ""
+  );
 
-  useEffect(() => {
-    getLthCourses()
-      .then(setLthCourses)
-      .catch((error) => {
-        console.error("Failed to fetch LTH courses:", error);
-      });
-  }, []);
+  const setSelectedProgram: React.Dispatch<React.SetStateAction<string>> = (
+    programOrUpdater
+  ) => {
+    const newProgram =
+      typeof programOrUpdater === "function"
+        ? programOrUpdater(selectedProgram)
+        : programOrUpdater;
+
+    window.sessionStorage.setItem("selectedProgram", newProgram);
+    setSelectedProgramState(newProgram);
+  };
+
+  const setSelectedYear: React.Dispatch<React.SetStateAction<string>> = (
+    yearOrUpdater
+  ) => {
+    const newYear =
+      typeof yearOrUpdater === "function"
+        ? yearOrUpdater(selectedYear)
+        : yearOrUpdater;
+
+    window.sessionStorage.setItem("selectedYear", newYear);
+    setSelectedYearState(newYear);
+  };
 
   const setCourses: React.Dispatch<React.SetStateAction<CourseGrade[]>> = (
     coursesOrUpdater
@@ -87,29 +78,38 @@ function Layout() {
           <Link to="/">
             <h1 className="text-3xl font-bold text-center ">GradeWise</h1>
           </Link>
-          <NavBar /> {/* remove later? */}
+          <NavBar
+            selectedProgram={selectedProgram}
+            selectedYear={selectedYear}
+            selectedProgramOld={selectedProgramOld}
+            selectedYearOld={selectedYearOld}
+            setSelectedProgramOld={setSelectedProgramOld}
+            setSelectedYearOld={setSelectedYearOld}
+            setSelectedProgram={setSelectedProgram}
+            setSelectedYear={setSelectedYear}
+          />{" "}
+          {/* remove later? */}
           <div className="mr-4 flex gap-2">
             <ThemeChooser />
             <ThemeToggle />
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => {
-                console.log(courses);
-                window.sessionStorage.setItem(
-                  "courses",
-                  JSON.stringify(courses)
-                );
-              }}
-              className="relative h-9 w-9"
-            >
-              T<span className="sr-only">Test button</span>
-            </Button>
           </div>
         </div>
       </nav>
       <div className="mx-[2em]">
-        <Outlet context={{ courses, setCourses, lthCourses }} />
+        <Outlet
+          context={{
+            courses,
+            setCourses,
+            lthCourses,
+            setLthCourses,
+            selectedYear,
+            setSelectedYear,
+            selectedProgram,
+            setSelectedProgram,
+            selectedProgramOld,
+            selectedYearOld,
+          }}
+        />
       </div>
     </ThemeProvider>
   );
