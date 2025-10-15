@@ -16,6 +16,7 @@ class CourseGrade {
   private readonly year?: number;
   private readonly periods?: number[];
   private readonly entryRequirements?: number;
+  private readonly website?: string;
 
   constructor(
     name: string,
@@ -25,7 +26,8 @@ class CourseGrade {
     code?: string,
     year?: number,
     periods?: number[],
-    entryRequirements?: number
+    entryRequirements?: number,
+    website?: string
   ) {
     this.name = name;
     this.credits = credits;
@@ -35,6 +37,7 @@ class CourseGrade {
     this.year = year;
     this.periods = periods;
     this.entryRequirements = entryRequirements;
+    this.website = website;
   }
 
   getCode(): string {
@@ -57,7 +60,11 @@ class CourseGrade {
   }
 
   shouldBeGraded(): boolean {
-    return this.gradingScale == 2;
+    return (
+      this.gradingScale == 2 &&
+      !isNaN(Number(this.grade)) &&
+      Number(this.grade) !== 0
+    );
   }
 
   getWeightedGrade(): number {
@@ -71,11 +78,41 @@ class CourseGrade {
   }
 
   getCredits(): number {
-    return this.shouldBeGraded() ? this.credits : 0;
+    return this.credits ? this.credits : 0;
   }
 
   getEntryRequirements(): number {
     return this.entryRequirements ? this.entryRequirements : 0;
+  }
+
+  getGradingScale(): number {
+    return this.gradingScale;
+  }
+
+  getWebsite(): string | undefined {
+    return this.website;
+  }
+
+  static parse(courseGradeData: string): CourseGrade[] {
+    try {
+      const data = JSON.parse(courseGradeData);
+      return data.map((item: any) => {
+        return new CourseGrade(
+          item.name,
+          item.credits,
+          item.grade,
+          item.gradingScale,
+          item.code,
+          item.year,
+          item.periods,
+          item.entryRequirements,
+          item.website
+        );
+      });
+    } catch (error) {
+      console.error("Failed to parse course grade data:", error);
+      return [];
+    }
   }
 }
 

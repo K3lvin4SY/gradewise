@@ -1,12 +1,9 @@
 import { useMemo, useState } from "react";
-import type { CourseGrade } from "./models/CourseGrade";
 import SplitText from "./components/animated/SplitText";
 import { Button } from "./components/ui/button";
 import { Link } from "react-router-dom";
 
 function GetStarted() {
-  const [courses, setCourses] = useState<CourseGrade[]>([]);
-
   const welcomeMessages = [
     "Welcome, academic achiever!",
     "Welcome, knowledge seeker!",

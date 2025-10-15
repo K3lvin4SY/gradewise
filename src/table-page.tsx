@@ -16,9 +16,32 @@ import { Button } from "./components/ui/button";
 import { ScrollArea } from "./components/ui/scroll-area";
 import CoursePeriods from "./components/ui/course-periods";
 import { useState, type FormEvent } from "react";
+import {
+  IconRowInsertBottom,
+  IconTrash,
+  IconEraser,
+  IconAlertCircle,
+} from "@tabler/icons-react";
+import AverageGrade from "./average-grade";
+import { useOutletContext } from "react-router-dom";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "./components/ui/tooltip";
+import { InputSearch } from "./input-search";
+
+type OutletContext = {
+  courses: CourseGrade[];
+  setCourses: React.Dispatch<React.SetStateAction<CourseGrade[]>>;
+  lthCourses: CourseGrade[];
+};
 
 function TablePage() {
-  const [courses, setCourses] = useState<CourseGrade[]>([]);
+  const { courses, setCourses, lthCourses } = useOutletContext<OutletContext>();
+  const [selectedCourseName, setSelectedCourseName] = useState<
+    string | CourseGrade
+  >("");
 
   const [row, setRow] = useState({
     code: "",
@@ -64,128 +87,180 @@ function TablePage() {
   return (
     <Card className="w-full">
       <CardContent>
-        <Table className="w-full overflow-y-auto ">
-          <ScrollArea className="h-[80vh]">
-            {tableHead}
-            <TableBody>
-              {courses.map((course) => (
-                <TableRow key={course.getCode()} className="hover:bg-muted/50">
-                  <TableCell className="text-left w-1/10">
-                    {course.getCode()}
-                  </TableCell>
+        <div className="w-full overflow-hidden">
+          <Table className="w-full table-fixed">{tableHead}</Table>
 
-                  <TableCell className="text-left w-5/10">
-                    <div className="truncate">
-                      {course.getName().length > 50
-                        ? `${course.getName().slice(0, 50)}...`
-                        : course.getName()}
-                    </div>
-                  </TableCell>
+          <ScrollArea className="h-[calc(100vh-300px)] w-full overflow-x-hidden">
+            <Table className="w-full table-fixed">
+              <TableBody>
+                {courses.map((course) => (
+                  <TableRow
+                    key={course.getCode()}
+                    className="hover:bg-muted/50"
+                  >
+                    <TableCell className="text-center w-24">
+                      <div className="flex items-center gap-1">
+                        {course.getCode()}
+                        {course.getEntryRequirements() > 0 && (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <IconAlertCircle className="w-[1.1em] h-[1.1em] text-amber-600 hover:scale-105" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <h1 className="text-lg font-bold text-amber-700">
+                                Warning
+                              </h1>
+                              <p>
+                                This course has {course.getEntryRequirements()}{" "}
+                                entry requirements.
+                              </p>
+                              <p>
+                                Please make sure you meet these requirements
+                                before enrolling.
+                              </p>
+                              <p>
+                                You can find more information about the
+                                requirements in the course's{" "}
+                                <a
+                                  href={course.getWebsite()}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="underline hover:underline-offset-2 text-blue-600"
+                                >
+                                  website
+                                </a>
+                                .
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
+                      </div>
+                    </TableCell>
 
-                  <TableCell className="text-left w-1/20">
-                    {course.getCredits()}
-                  </TableCell>
-                  <TableCell className="text-left w-1/10">
-                    <Input
-                      placeholder={
-                        course.getGrade() ? course.getGrade() : "Grade"
-                      }
-                      onChange={(e) =>
-                        setRow({ ...row, credits: e.target.value })
-                      }
-                    ></Input>
-                  </TableCell>
-                  <TableCell className="text-left w-1/20">
-                    {course.getYear()}
-                  </TableCell>
-                  <TableCell className="text-left w-1/10">
-                    <CoursePeriods checkedPeriods={course.getPeriods()} />
-                  </TableCell>
-                  <TableCell className="text-left w-1/10">
-                    <Button
-                      className="w-full bg-destructive"
-                      onClick={() => handleDelete(course)}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+                    <TableCell className="text-left">
+                      <div className="flex items-center gap-1">
+                        <div className="truncate">{course.getName()}</div>
+                      </div>
+                    </TableCell>
 
-            <TableFooter className="sticky bottom-0 z-10 bg-card">
+                    <TableCell className="text-center w-22">
+                      {course.getCredits()}
+                    </TableCell>
+                    <TableCell className="text-center w-20">
+                      <Input
+                        placeholder={
+                          course.getGrade() ? course.getGrade() : "Grade"
+                        }
+                        onChange={(e) =>
+                          setRow({
+                            ...row,
+                            grade: e.target.value,
+                          })
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="text-center w-18">
+                      {course.getYear()}
+                    </TableCell>
+                    <TableCell className="text-center w-34">
+                      <CoursePeriods checkedPeriods={course.getPeriods()} />
+                    </TableCell>
+                    <TableCell className="text-left w-16">
+                      <Button
+                        variant="destructive"
+                        className="aspect-square w-[40px] h-[40px]"
+                        onClick={() => handleDelete(course)}
+                      >
+                        <IconTrash />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </ScrollArea>
+
+          <Table className="w-full table-fixed">
+            <TableFooter className="bg-card border-t">
               <TableRow className="hover:bg-muted/0">
-                <TableCell className="w-1/10">
+                <TableCell className="w-24">
                   <Input
+                    value={row.code}
                     onChange={(e) => setRow({ ...row, code: e.target.value })}
-                    placeholder={"CourseCode"}
+                    placeholder="CourseCode"
                   />
                 </TableCell>
 
-                <TableCell className="w-5/10">
-                  <Input
+                <TableCell>
+                  {/*<Input
                     name="course"
+                    value={row.course}
                     placeholder="Course"
                     onChange={(e) => setRow({ ...row, course: e.target.value })}
+                  />*/}
+                  <InputSearch
+                    courses={lthCourses}
+                    value={selectedCourseName}
+                    onValueChange={setSelectedCourseName}
+                    placeholder="Type or select a course..."
                   />
                 </TableCell>
 
-                <TableCell className="w-1/20">
+                <TableCell className="w-22">
                   <Input
-                    placeholder={"Credits"}
+                    value={row.credits}
+                    placeholder="Credits"
                     onChange={(e) =>
                       setRow({ ...row, credits: e.target.value })
                     }
                   />
                 </TableCell>
 
-                <TableCell className="w-1/10">
+                <TableCell className="w-20">
                   <Input
-                    placeholder={"Grade"}
+                    value={row.grade}
+                    placeholder="Grade"
                     onChange={(e) => setRow({ ...row, grade: e.target.value })}
                   />
                 </TableCell>
 
-                <TableCell className="w-1/20">
+                <TableCell className="w-18">
                   <Input
-                    placeholder={"Year"}
+                    value={row.year}
+                    placeholder="Year"
                     onChange={(e) => setRow({ ...row, year: e.target.value })}
                   />
                 </TableCell>
 
-                <TableCell className="w-1/10">
+                <TableCell className="w-34">
                   <Input
-                    placeholder={"Periods"}
+                    value={row.periods}
+                    placeholder="Periods"
                     onChange={(e) =>
                       setRow({ ...row, periods: e.target.value })
                     }
                   />
                 </TableCell>
-                <TableCell className="w-1/10">
-                  <Button className="bg-chart-5 w-full" onClick={handleSubmit}>
-                    Add Course
+                <TableCell className="w-16">
+                  <Button
+                    className="aspect-square bg-chart-5 w-[40px] h-[40px]"
+                    onClick={handleSubmit}
+                  >
+                    <IconRowInsertBottom />
                   </Button>
                 </TableCell>
               </TableRow>
             </TableFooter>
-          </ScrollArea>
-        </Table>
+          </Table>
+        </div>
 
         <div className="mt-4 flex gap-4">
           <ProgramSelector setCourseGrades={setCourses} />
           <TranscriptLoader setCourseGrades={setCourses} />
-          <span>
-            Average Grade:{" "}
-            {/*(
-              courses
-                .map((course) => course.getWeightedGrade())
-                .reduce((a, b) => a + b, 0) /
-              courses
-                .map((course) => course.getCredits())
-                .reduce((a, b) => a + b, 0)
-            ) // finish this later
-              .toFixed(2)*/}
-          </span>
+          <Button variant="destructive" onClick={() => setCourses([])}>
+            Clear <IconEraser />
+          </Button>
+          <AverageGrade courses={courses} />
         </div>
       </CardContent>
     </Card>
@@ -193,15 +268,15 @@ function TablePage() {
 }
 
 const tableHead = (
-  <TableHeader className="sticky top-0 z-10 bg-card">
-    <TableRow className="hover:bg-muted/0">
-      <TableHead className="font-semibold">CourseCode</TableHead>
+  <TableHeader className="bg-card border-b">
+    <TableRow className="hover:bg-muted/0 text-base">
+      <TableHead className="font-semibold w-24">CourseCode</TableHead>
       <TableHead className="font-semibold">Course</TableHead>
-      <TableHead className="font-semibold">Credits</TableHead>
-      <TableHead className="font-semibold">Grade</TableHead>
-      <TableHead className="font-semibold">Year</TableHead>
-      <TableHead className="font-semibold">Periods</TableHead>
-      <TableHead className="font-semibold"></TableHead>
+      <TableHead className="font-semibold w-22 text-center">Credits</TableHead>
+      <TableHead className="font-semibold w-20 text-center">Grade</TableHead>
+      <TableHead className="font-semibold w-18 text-center">Year</TableHead>
+      <TableHead className="font-semibold w-34 text-center">Periods</TableHead>
+      <TableHead className="font-semibold w-16"></TableHead>
     </TableRow>
   </TableHeader>
 );
