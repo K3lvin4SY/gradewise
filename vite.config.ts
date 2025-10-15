@@ -16,9 +16,4 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
   },
-  server: {
-    port: 3000,
-    host: true,
-    allowedHosts: ["3000.dev.donkare.se", "localhost"],
-  },
 });
