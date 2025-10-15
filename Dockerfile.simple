@@ -2,6 +2,12 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Add build args for cache busting
+ARG BUILD_DATE
+ARG GIT_COMMIT
+ENV REACT_APP_BUILD_DATE=$BUILD_DATE
+ENV REACT_APP_GIT_COMMIT=$GIT_COMMIT
+
 # Copy package files
 COPY package*.json ./
 

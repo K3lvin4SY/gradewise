@@ -5,6 +5,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.simple
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+        - BUILD_DATE=${BUILD_DATE:-$(date -u +'%Y-%m-%dT%H:%M:%SZ')}
     ports:
       - "4414:3000"
     restart: unless-stopped
