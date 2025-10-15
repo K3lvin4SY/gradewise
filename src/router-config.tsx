@@ -1,6 +1,8 @@
 import Layout from "./layout";
 import GetStarted from "./get-started";
 import TablePage from "./table-page";
+import ProgramSelector from "./program-selector";
+import NotFound from "./not-found";
 
 const routerconfig = [
   {
@@ -12,8 +14,16 @@ const routerconfig = [
         element: <GetStarted />,
       },
       {
-        path: "/table-page",
+        path: "/program-selector/",
+        element: <ProgramSelector />,
+      },
+      {
+        path: "/table-page/",
         element: <TablePage />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
       },
     ],
   },

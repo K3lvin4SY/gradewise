@@ -1,9 +1,16 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import SplitText from "./components/animated/SplitText";
 import { Button } from "./components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
+
+type OutletContext = {
+  selectedProgram: string;
+  selectedYear: string;
+};
 
 function GetStarted() {
+  const { selectedProgram, selectedYear } = useOutletContext<OutletContext>();
+
   const welcomeMessages = [
     "Welcome, academic achiever!",
     "Welcome, knowledge seeker!",
@@ -64,7 +71,15 @@ function GetStarted() {
       />
       <br />
       <Button asChild className="py-4 px-8 text-lg font-bold rounded-lg ">
-        <Link to="/table-page">Get Started</Link>
+        <Link
+          to={
+            selectedProgram === "" && selectedYear === ""
+              ? "/program-selector"
+              : "/table-page"
+          }
+        >
+          Get Started
+        </Link>
       </Button>
     </div>
   );

@@ -1,16 +1,5 @@
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./components/ui/button";
-import { IconSearch } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -26,24 +15,117 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { Label } from "@radix-ui/react-label";
 import { CourseGrade } from "./models/CourseGrade";
 import { ScrollArea } from "./components/ui/scroll-area";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./components/ui/card";
 
 type Option = { value: string; label: string };
 
-interface PropType {
-  setCourseGrades: (grades: CourseGrade[]) => void;
+type OutletContext = {
+  courses: CourseGrade[];
+  setCourses: React.Dispatch<React.SetStateAction<CourseGrade[]>>;
+  lthCourses: CourseGrade[];
+  setLthCourses: React.Dispatch<React.SetStateAction<CourseGrade[]>>;
+  selectedProgram: string;
+  setSelectedProgram: React.Dispatch<React.SetStateAction<string>>;
+  selectedYear: string;
+  setSelectedYear: React.Dispatch<React.SetStateAction<string>>;
+};
+
+function parseLthProgramData(courseData: any[]): CourseGrade[] {
+  return courseData
+    .map((course) => {
+      const periods = course.timePlans[0]?.studyPeriods.filter(
+        (item: null | any) => item !== null
+      ).length;
+      const startPeriod = course.timePlans[0]?.studyPeriods.findIndex(
+        (item: null | any) => item !== null
+      );
+      return { ...course, periods, startPeriod };
+    })
+    .map(
+      (course: any) =>
+        new CourseGrade(
+          course.name_en,
+          course.credits,
+          "",
+          course.gradingScale === "TH" ? 2 : 1,
+          course.courseCode,
+          course.year,
+          Array.from(
+            { length: course.periods },
+            (_, i) => course.startPeriod + i
+          ),
+          course.entryRequirements
+        )
+    )
+    .filter(
+      (course, index, self) =>
+        index === self.findIndex((c) => c.getCode() === course.getCode())
+    ); // duplicate courses with the same course code. remove the duplicate but keep the fist one.
 }
-function ProgramSelector({ setCourseGrades }: PropType) {
+
+function parseProgramData(data: any[]): CourseGrade[] {
+  return data
+    .filter((course) => course.choice === "mandatory")
+    .map((course) => {
+      const periods = course.timePlans[0]?.studyPeriods.filter(
+        (item: null | any) => item !== null
+      ).length;
+      const startPeriod = course.timePlans[0]?.studyPeriods.findIndex(
+        (item: null | any) => item !== null
+      );
+      return { ...course, periods, startPeriod };
+    })
+    .sort((a, b) => a.periods - b.periods)
+    .sort((a, b) => a.startPeriod - b.startPeriod)
+    .sort((a, b) => a.year - b.year)
+    .map(
+      (course: any) =>
+        new CourseGrade(
+          course.name_en,
+          course.credits,
+          "",
+          course.gradingScale === "TH" ? 2 : 1,
+          course.courseCode,
+          course.year,
+          Array.from(
+            { length: course.periods },
+            (_, i) => course.startPeriod + i
+          ),
+          course.entryRequirements,
+          course.homePage_en
+        )
+    );
+}
+
+function ProgramSelector() {
+  const { setCourses, setLthCourses, setSelectedProgram, setSelectedYear } =
+    useOutletContext<OutletContext>();
+
   const [programOptions, setProgramOptions] = useState<Option[]>([]);
   const [yearOptions, setYearOptions] = useState<Option[]>([]);
 
   const [program, setProgram] = useState<string | undefined>(undefined);
   const [year, setYear] = useState<string | undefined>(undefined);
 
-  function handleSearch(event: React.FormEvent) {
+  const navigate = useNavigate();
+
+  function handleSelect(event: React.FormEvent) {
     event.preventDefault();
+
+    if (!program || !year) {
+      alert("Please select both program and start year.");
+      return;
+    }
 
     fetch(
       `https://api.lth.lu.se/lot/courses?programmeCode=${program}&academicYearId=${year}`
@@ -51,46 +133,19 @@ function ProgramSelector({ setCourseGrades }: PropType) {
       .then((response) => response.json())
       .then((data) => {
         const grades = parseProgramData(data);
+        const lthGrades = parseLthProgramData(data);
         console.log("Set course grades from program:", grades);
-        setCourseGrades(grades);
+        setCourses(grades);
+        setLthCourses(lthGrades);
       })
       .catch((error) => {
         console.error("Error fetching courses:", error);
       });
-  }
 
-  function parseProgramData(data: any[]): CourseGrade[] {
-    return data
-      .filter((course) => course.choice === "mandatory")
-      .map((course) => {
-        const periods = course.timePlans[0]?.studyPeriods.filter(
-          (item: null | any) => item !== null
-        ).length;
-        const startPeriod = course.timePlans[0]?.studyPeriods.findIndex(
-          (item: null | any) => item !== null
-        );
-        return { ...course, periods, startPeriod };
-      })
-      .sort((a, b) => a.periods - b.periods)
-      .sort((a, b) => a.startPeriod - b.startPeriod)
-      .sort((a, b) => a.year - b.year)
-      .map(
-        (course: any) =>
-          new CourseGrade(
-            course.name_en,
-            course.credits,
-            "",
-            course.gradingScale === "TH" ? 2 : 1,
-            course.courseCode,
-            course.year,
-            Array.from(
-              { length: course.periods },
-              (_, i) => course.startPeriod + i
-            ),
-            course.entryRequirements,
-            course.homePage_en
-          )
-      );
+    setSelectedProgram(program || "");
+    setSelectedYear(year || "");
+
+    navigate("/table-page");
   }
 
   function fetchOptions() {
@@ -115,25 +170,22 @@ function ProgramSelector({ setCourseGrades }: PropType) {
       });
   }
 
+  useEffect(() => {
+    fetchOptions();
+  }, []);
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm" onClick={fetchOptions}>
-          <IconSearch />
-          Search program
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <form onSubmit={handleSearch}>
-          <DialogHeader>
-            <DialogTitle>Search program</DialogTitle>
-            <DialogDescription>
-              Search for a program to add to your list.
-            </DialogDescription>
-          </DialogHeader>
+    <Card className="w-full max-w-lg mx-auto mt-[30vh]">
+      <form onSubmit={handleSelect}>
+        <CardContent>
           <div className="grid gap-4">
+            <CardHeader>
+              <CardTitle>Find program</CardTitle>
+              <CardDescription>
+                Select a program to get your courses.
+              </CardDescription>
+            </CardHeader>
             <div className="grid gap-3">
-              <Label htmlFor="name-1">Program</Label>
               <Combobox
                 key="program"
                 options={programOptions}
@@ -141,33 +193,28 @@ function ProgramSelector({ setCourseGrades }: PropType) {
                 value={program}
                 onChange={setProgram}
               />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="username-1">Academic Year</Label>
               <Combobox
                 key="year"
                 options={yearOptions}
-                type="year"
+                type="start year"
                 value={year}
                 onChange={setYear}
               />
             </div>
           </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <DialogClose asChild>
-              <Button type="submit">Search</Button>
-            </DialogClose>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+        </CardContent>
+        <CardFooter className="flex flex-row justify-end">
+          <Button className="" type="submit">
+            Select
+          </Button>
+        </CardFooter>
+      </form>
+    </Card>
   );
 }
 
 export default ProgramSelector;
+export { parseLthProgramData };
 
 type ComboBoxType = {
   options: Option[];
