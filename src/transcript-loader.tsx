@@ -1,7 +1,6 @@
-import { Loader2Icon } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { CourseGrade } from "./models/CourseGrade";
-import { IconFileUpload } from "@tabler/icons-react";
+import { IconFileUpload, IconLoader2 } from "@tabler/icons-react";
 import { useRef, useState } from "react";
 
 interface PropType {
@@ -96,7 +95,7 @@ function TranscriptLoader({ setCourseGrades }: PropType) {
         disabled={isLoading}
       >
         {isLoading ? (
-          <Loader2Icon className="animate-spin" />
+          <IconLoader2 className="animate-spin" />
         ) : (
           <IconFileUpload />
         )}

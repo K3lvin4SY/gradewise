@@ -14,7 +14,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { CourseGrade } from "./models/CourseGrade";
 import { ScrollArea } from "./components/ui/scroll-area";
 import { useNavigate, useOutletContext } from "react-router-dom";
@@ -26,6 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./components/ui/card";
+import { IconCheck, IconSelector } from "@tabler/icons-react";
 
 type Option = { value: string; label: string };
 
@@ -247,7 +247,7 @@ function Combobox({ options, type, value, onChange }: ComboBoxType) {
               ? options.find((option) => option.value === currentValue)?.label
               : `Select ${type}...`}
           </span>
-          <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <IconSelector className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="min-w-[200px] p-0">
@@ -266,7 +266,7 @@ function Combobox({ options, type, value, onChange }: ComboBoxType) {
                       setOpen(false);
                     }}
                   >
-                    <CheckIcon
+                    <IconCheck
                       className={cn(
                         "mr-2 h-4 w-4",
                         currentValue === option.value

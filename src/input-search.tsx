@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CheckIcon } from "lucide-react";
+import { IconCheck } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
 import {
@@ -181,7 +181,7 @@ export function InputSearch({
                       value={course.getCode()}
                       onSelect={() => handleSelectCourse(course.getCode())}
                     >
-                      <CheckIcon
+                      <IconCheck
                         className={cn(
                           "mr-2 h-4 w-4",
                           isSelected ? "opacity-100" : "opacity-0"

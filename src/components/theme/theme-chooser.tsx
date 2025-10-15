@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { IconCheck, IconSelector } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -95,7 +95,7 @@ export function ThemeChooser() {
               {selectedThemeData?.name || "Select theme..."}
             </span>
           </div>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <IconSelector className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="min-w-[280px] p-0">
@@ -141,7 +141,7 @@ export function ThemeChooser() {
                         New
                       </span>
                     )}
-                    <Check
+                    <IconCheck
                       className={cn(
                         "ml-auto h-4 w-4",
                         theme === themeItem.value ? "opacity-100" : "opacity-0"
