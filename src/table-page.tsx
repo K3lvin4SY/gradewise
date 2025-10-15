@@ -60,32 +60,37 @@ function TablePage() {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setCourses((prev) => [
-      ...prev,
-      selectedCourseName instanceof CourseGrade
-        ? new CourseGrade(
-            selectedCourseName.getName(),
-            selectedCourseName.getCredits(),
-            row.grade,
-            selectedCourseName.getGradingScale(),
-            selectedCourseName.getCode(),
-            selectedCourseName.getYear(),
-            selectedCourseName.getPeriods(),
-            selectedCourseName.getEntryRequirements()
-          )
-        : new CourseGrade(
-            selectedCourseName,
-            Number(row.credits),
-            row.grade,
-            2,
-            row.code,
-            Number(row.year),
-            row.periods
-              ? row.periods.split(",").map((p) => Number(p.trim()) - 1)
-              : [],
-            0
-          ),
-    ]);
+    setCourses((prev) =>
+      [
+        ...prev,
+        selectedCourseName instanceof CourseGrade
+          ? new CourseGrade(
+              selectedCourseName.getName(),
+              selectedCourseName.getCredits(),
+              row.grade,
+              selectedCourseName.getGradingScale(),
+              selectedCourseName.getCode(),
+              selectedCourseName.getYear(),
+              selectedCourseName.getPeriods(),
+              selectedCourseName.getEntryRequirements()
+            )
+          : new CourseGrade(
+              selectedCourseName,
+              Number(row.credits),
+              row.grade,
+              2,
+              row.code,
+              Number(row.year),
+              row.periods
+                ? row.periods.split(",").map((p) => Number(p.trim()) - 1)
+                : [],
+              0
+            ),
+      ]
+        .sort((a, b) => a.getPeriods().length - b.getPeriods().length)
+        .sort((a, b) => a.getPeriods()[0] - b.getPeriods()[0])
+        .sort((a, b) => a.getYear() - b.getYear())
+    );
 
     setRow({
       code: "",
