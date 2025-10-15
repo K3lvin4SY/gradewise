@@ -66,7 +66,11 @@ function parseLthProgramData(courseData: any[]): CourseGrade[] {
           ),
           course.entryRequirements
         )
-    );
+    )
+    .filter(
+      (course, index, self) =>
+        index === self.findIndex((c) => c.getCode() === course.getCode())
+    ); // duplicate courses with the same course code. remove the duplicate but keep the fist one.
 }
 
 function parseProgramData(data: any[]): CourseGrade[] {
@@ -171,7 +175,7 @@ function ProgramSelector() {
   }, []);
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
+    <Card className="w-full max-w-lg mx-auto mt-[30vh]">
       <form onSubmit={handleSelect}>
         <CardContent>
           <div className="grid gap-4">
