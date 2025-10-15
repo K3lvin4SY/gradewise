@@ -1,4 +1,3 @@
-import { get } from "http";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type ColorMode = "dark" | "light" | "system";

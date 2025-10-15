@@ -1,12 +1,3 @@
-type CourseRowData = {
-  code: string;
-  name: string;
-  credits: number;
-  grade: string;
-  year: number;
-  periods: number[];
-};
-
 class CourseGrade {
   private readonly name: string;
   private readonly credits: number;
