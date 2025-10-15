@@ -19,7 +19,7 @@ export function NavBar({
     <>
       <NavigationMenu viewport={true}>
         <NavigationMenuList>
-          <NavigationMenuItem>
+          <NavigationMenuItem className="flex gap-2 w-[9em] justify-center">
             <NavigationMenuLink
               asChild
               className={navigationMenuTriggerStyle()}
@@ -27,7 +27,7 @@ export function NavBar({
               <Link to="/">Welcome</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem>
+          <NavigationMenuItem className="flex gap-2 w-[9em] justify-center">
             <NavigationMenuLink
               asChild
               className={navigationMenuTriggerStyle()}
@@ -35,7 +35,7 @@ export function NavBar({
               <Link to="/program-selector">Select Program</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem>
+          <NavigationMenuItem className="flex gap-2 w-[9em] justify-center">
             <NavigationMenuLink
               asChild
               className={navigationMenuTriggerStyle()}
