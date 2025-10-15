@@ -89,7 +89,12 @@ function TranscriptLoader({ setCourseGrades }: PropType) {
         onChange={handleFileChange}
         style={{ display: "none" }}
       />
-      <Button onClick={handleButtonClick} disabled={isLoading}>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleButtonClick}
+        disabled={isLoading}
+      >
         {isLoading ? (
           <Loader2Icon className="animate-spin" />
         ) : (

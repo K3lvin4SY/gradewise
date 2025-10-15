@@ -29,6 +29,7 @@ import {
   TooltipTrigger,
 } from "./components/ui/tooltip";
 import { InputSearch } from "./input-search";
+import { Alert } from "./components/ui/alert";
 
 type OutletContext = {
   courses: CourseGrade[];
@@ -103,6 +104,45 @@ function TablePage() {
     );
   }
 
+  function handleNewGrade(course: CourseGrade, grade: string) {
+    //handleDelete(course);
+
+    setCourses((prev) =>
+      prev.map((c) => {
+        if (c.getCode() !== course.getCode()) {
+          return c;
+        } else {
+          return new CourseGrade(
+            course.getName(),
+            course.getCredits(),
+            grade,
+            course.getGradingScale(),
+            course.getCode(),
+            course.getYear(),
+            course.getPeriods(),
+            course.getEntryRequirements(),
+            course.getWebsite()
+          );
+        }
+      })
+    );
+    /*
+    setCourses((prev) => [
+      ...prev,
+      new CourseGrade(
+        course.getName(),
+        course.getCredits(),
+        grade,
+        course.getGradingScale(),
+        course.getCode(),
+        course.getYear(),
+        course.getPeriods(),
+        course.getEntryRequirements(),
+        course.getWebsite()
+      ),
+    ]); */
+  }
+
   return (
     <Card className="w-full">
       <CardContent>
@@ -174,12 +214,13 @@ function TablePage() {
                         placeholder={
                           course.getGrade() ? course.getGrade() : "Grade"
                         }
-                        onChange={(e) =>
-                          setRow({
-                            ...row,
-                            grade: e.target.value,
-                          })
-                        }
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            setRow({ ...row, grade: e.currentTarget.value });
+                            handleNewGrade(course, e.currentTarget.value);
+                            e.currentTarget.blur();
+                          }
+                        }}
                       />
                     </TableCell>
                     <TableCell className="text-center w-18">
@@ -215,12 +256,6 @@ function TablePage() {
                 </TableCell>
 
                 <TableCell>
-                  {/*<Input
-                    name="course"
-                    value={row.course}
-                    placeholder="Course"
-                    onChange={(e) => setRow({ ...row, course: e.target.value })}
-                  />*/}
                   <InputSearch
                     courses={lthCourses}
                     value={selectedCourseName}
@@ -279,10 +314,18 @@ function TablePage() {
 
         <div className="mt-4 flex gap-4">
           <TranscriptLoader setCourseGrades={setCourses} />
-          <Button variant="destructive" onClick={() => setCourses([])}>
-            Clear <IconEraser />
-          </Button>
-          <AverageGrade courses={courses} />
+
+          <div className="ml-auto flex gap-4 items-center">
+            <AverageGrade courses={courses} />
+
+            <Button
+              className="flex justify-end"
+              variant="destructive"
+              onClick={() => setCourses([])}
+            >
+              Clear all <IconEraser />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
