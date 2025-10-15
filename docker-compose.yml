@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  gradewise:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    ports:
+      - "4414:3000"
+    restart: unless-stopped
+    container_name: gradewise-app
+    environment:
+      - NODE_ENV=production
