@@ -107,7 +107,12 @@ function Layout() {
     <ThemeProvider>
       <nav className="w-[80vw] mx-auto">
         <div className="my-4 flex items-center justify-between">
-          <Link to="/" className="w-[17em]">
+          <Link to="/" className="w-[17em] flex items-center gap-3">
+            <img
+              src="./gradewise-logo.svg"
+              alt=""
+              className="h-7 object-contain pb-0.5 m-0"
+            />
             <h1 className="text-3xl font-bold">GradeWise</h1>
           </Link>
           <NavBar

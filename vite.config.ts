@@ -16,4 +16,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
   },
+  server: {
+    allowedHosts: ["gradewise.donkare.se"],
+  },
 });
