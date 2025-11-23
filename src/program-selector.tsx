@@ -145,7 +145,7 @@ function ProgramSelector() {
     setSelectedProgram(program || "");
     setSelectedYear(year || "");
 
-    navigate("/table-page");
+    navigate("/table");
   }
 
   function fetchOptions() {
@@ -179,38 +179,73 @@ function ProgramSelector() {
     fetchOptions();
   }, []);
 
+  // UI translations
+  const uiText = {
+    en: {
+      title: "Find program",
+      description: "Select a program to get your courses.",
+      programType: "program",
+      yearType: "start year",
+      selectButton: "Select",
+      selectProgramPlaceholder: "Select program...",
+      selectYearPlaceholder: "Select start year...",
+      searchProgramPlaceholder: "Search program...",
+      searchYearPlaceholder: "Search start year...",
+      noProgram: "No program found.",
+      noYear: "No start year found.",
+    },
+    sv: {
+      title: "Hitta program",
+      description: "Välj ett program för att få dina kurser.",
+      programType: "program",
+      yearType: "startår",
+      selectButton: "Välj",
+      selectProgramPlaceholder: "Välj program...",
+      selectYearPlaceholder: "Välj startår...",
+      searchProgramPlaceholder: "Sök program...",
+      searchYearPlaceholder: "Sök startår...",
+      noProgram: "Inget program hittades.",
+      noYear: "Inget startår hittades.",
+    },
+  };
+  const t = uiText[language] || uiText.en;
+
   return (
     <Card className="w-full max-w-lg mx-auto mt-[30vh]">
       <form onSubmit={handleSelect}>
         <CardContent>
           <div className="grid gap-4">
             <CardHeader>
-              <CardTitle>Find program</CardTitle>
-              <CardDescription>
-                Select a program to get your courses.
-              </CardDescription>
+              <CardTitle>{t.title}</CardTitle>
+              <CardDescription>{t.description}</CardDescription>
             </CardHeader>
             <div className="grid gap-3">
               <Combobox
                 key="program"
                 options={language === "en" ? programOptions : svProgramOptions}
-                type="program"
+                type={t.programType}
                 value={program}
                 onChange={setProgram}
+                placeholder={t.selectProgramPlaceholder}
+                searchPlaceholder={t.searchProgramPlaceholder}
+                emptyText={t.noProgram}
               />
               <Combobox
                 key="year"
                 options={yearOptions}
-                type="start year"
+                type={t.yearType}
                 value={year}
                 onChange={setYear}
+                placeholder={t.selectYearPlaceholder}
+                searchPlaceholder={t.searchYearPlaceholder}
+                emptyText={t.noYear}
               />
             </div>
           </div>
         </CardContent>
         <CardFooter className="flex flex-row justify-end">
           <Button className="" type="submit">
-            Select
+            {t.selectButton}
           </Button>
         </CardFooter>
       </form>
@@ -226,8 +261,19 @@ type ComboBoxType = {
   type: string;
   value?: string;
   onChange?: (value: string) => void;
+  placeholder?: string;
+  searchPlaceholder?: string;
+  emptyText?: string;
 };
-function Combobox({ options, type, value, onChange }: ComboBoxType) {
+function Combobox({
+  options,
+  type,
+  value,
+  onChange,
+  placeholder,
+  searchPlaceholder,
+  emptyText,
+}: ComboBoxType) {
   const [open, setOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(value || "");
 
@@ -250,17 +296,19 @@ function Combobox({ options, type, value, onChange }: ComboBoxType) {
           <span className="truncate">
             {currentValue
               ? options.find((option) => option.value === currentValue)?.label
-              : `Select ${type}...`}
+              : placeholder || `Select ${type}...`}
           </span>
           <IconSelector className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="min-w-[200px] p-0">
         <Command>
-          <CommandInput placeholder={`Search ${type}...`} />
+          <CommandInput
+            placeholder={searchPlaceholder || `Search ${type}...`}
+          />
           <CommandList>
             <ScrollArea>
-              <CommandEmpty>No {type} found.</CommandEmpty>
+              <CommandEmpty>{emptyText || `No ${type} found.`}</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem

@@ -1,7 +1,14 @@
+import { useOutletContext } from "react-router-dom";
 import { Button } from "./components/ui/button";
 import { CourseGrade } from "./models/CourseGrade";
-import { IconFileUpload, IconLoader2 } from "@tabler/icons-react";
+import { IconFileUpload, IconHelp, IconLoader2 } from "@tabler/icons-react";
 import { useRef, useState } from "react";
+import type { OutletContext } from "./types";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "./components/ui/tooltip";
 
 interface PropType {
   setCourseGrades: React.Dispatch<React.SetStateAction<CourseGrade[]>>;
@@ -19,6 +26,7 @@ interface PropType {
  *
  */
 function TranscriptLoader({ setCourseGrades }: PropType) {
+  const { language } = useOutletContext<OutletContext>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -81,7 +89,7 @@ function TranscriptLoader({ setCourseGrades }: PropType) {
   };
 
   return (
-    <>
+    <div className="gap-2 flex flex-row items-center">
       <input
         ref={fileInputRef}
         type="file"
@@ -100,9 +108,38 @@ function TranscriptLoader({ setCourseGrades }: PropType) {
         ) : (
           <IconFileUpload />
         )}
-        {isLoading ? "Loading..." : "Upload Transcript"}
+        {isLoading
+          ? language === "en"
+            ? "Loading..."
+            : "Laddar..."
+          : language === "en"
+          ? "Upload National Ladok Transcript"
+          : "Ladda upp nationellt Ladok intyg"}
       </Button>
-    </>
+      <Tooltip>
+        <TooltipTrigger>
+          <IconHelp />
+        </TooltipTrigger>
+        <TooltipContent>
+          {language === "en"
+            ? "Upload your national Ladok transcript in .pdf format to automatically fill in your completed courses."
+            : "Ladda upp ditt nationella Ladok intyg i .pdf format för att automatiskt fylla i dina genomförda kurser."}
+          <br />
+          {language === "en"
+            ? "You can create the transcript in Ladok by following this link:"
+            : "Du kan skapa intyget i Ladok genom att följa denna länk:"}
+          <br />
+          <a
+            href="https://www.student.ladok.se/student/app/studentwebb/intyg/skapa-intyg"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 underline"
+          >
+            https://www.student.ladok.se/student/app/studentwebb/intyg/skapa-intyg
+          </a>
+        </TooltipContent>
+      </Tooltip>
+    </div>
   );
 }
 

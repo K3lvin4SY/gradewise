@@ -28,7 +28,7 @@ interface InputSearchProps {
       credits: string;
       grade: string;
       year: string;
-      periods: string;
+      periods: number[];
     }>
   >;
 }
@@ -77,10 +77,7 @@ export function InputSearch({
         credits: matchingCourse.getCredits().toString(),
         grade: "",
         year: matchingCourse.getYear().toString(),
-        periods: matchingCourse
-          .getPeriods()
-          .map((p) => p + 1)
-          .join(", "),
+        periods: matchingCourse.getPeriods(),
       });
     } else {
       onValueChange?.(newValue); // Just set the string value (manual course name)
@@ -100,10 +97,7 @@ export function InputSearch({
         credits: selectedCourse.getCredits().toString(),
         grade: "",
         year: selectedCourse.getYear().toString(),
-        periods: selectedCourse
-          .getPeriods()
-          .map((p) => p + 1)
-          .join(", "),
+        periods: selectedCourse.getPeriods(),
       });
     }
     setOpen(false); // close the popover

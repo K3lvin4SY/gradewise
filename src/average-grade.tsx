@@ -1,6 +1,9 @@
+import { useOutletContext } from "react-router-dom";
 import type { CourseGrade } from "./models/CourseGrade";
+import type { OutletContext } from "./types";
 
 function AverageGrade({ courses }: { courses: CourseGrade[] }) {
+  const { language } = useOutletContext<OutletContext>();
   const totalWeightedGrades = courses
     .filter((course) => course.shouldBeGraded())
     .map((course) => course.getWeightedGrade())
@@ -15,7 +18,8 @@ function AverageGrade({ courses }: { courses: CourseGrade[] }) {
 
   return (
     <span className="justify-self-end">
-      Average Grade: {average.toFixed(2)}
+      {language === "en" ? "Average Grade" : "Genomsnittligt betyg"}:{" "}
+      {average.toFixed(2)}
     </span>
   );
 }

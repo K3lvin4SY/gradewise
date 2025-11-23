@@ -7,14 +7,32 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import type { Language } from "./types";
 
 export function NavBar({
   selectedProgram,
   selectedYear,
+  language,
 }: {
   selectedProgram: string;
   selectedYear: string;
+  language: Language;
 }) {
+  const content = {
+    en: {
+      welcome: "Welcome",
+      selectProgram: "Select Program",
+      analyzeCourses: "Analyze Courses",
+    },
+    sv: {
+      welcome: "Välkommen",
+      selectProgram: "Välj Program",
+      analyzeCourses: "Analysera Kurser",
+    },
+  };
+
+  const text = content[language];
+
   return (
     <>
       <NavigationMenu viewport={true}>
@@ -24,7 +42,7 @@ export function NavBar({
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link to="/">Welcome</Link>
+              <Link to="/">{language === "en" ? "Welcome" : "Välkommen"}</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem className="flex gap-2 w-[9em] justify-center">
@@ -32,7 +50,9 @@ export function NavBar({
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link to="/program-selector">Select Program</Link>
+              <Link to="/programs">
+                {language === "en" ? "Select Program" : "Välj Program"}
+              </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem className="flex gap-2 w-[9em] justify-center">
@@ -40,14 +60,8 @@ export function NavBar({
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link
-                to={
-                  selectedProgram === "" && selectedYear === ""
-                    ? "/program-selector"
-                    : "/table-page"
-                }
-              >
-                Analyze Courses
+              <Link to="/table">
+                {language === "en" ? "Analyze Courses" : "Analysera Kurser"}
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>

@@ -113,10 +113,11 @@ function Layout() {
           <NavBar
             selectedProgram={selectedProgram}
             selectedYear={selectedYear}
+            language={language}
           />{" "}
           {/* remove later? */}
           <div className="flex gap-2 w-[17em] justify-end">
-            <ThemeChooser />
+            <ThemeChooser language={language} />
             <ThemeToggle />
             <LanguageChooser language={language} setLanguage={setLanguage} />
           </div>

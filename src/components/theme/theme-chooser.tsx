@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { useTheme } from "@/components/theme/theme-provider";
 import { ScrollArea } from "../ui/scroll-area";
+import type { Language } from "@/types";
 
 type Theme = {
   name: string;
@@ -25,36 +26,56 @@ type Theme = {
   new?: boolean;
 };
 
-const themes: Theme[] = [
-  {
-    name: "Default",
-    value: "default",
+const translations = {
+  en: {
+    selectTheme: "Select theme...",
+    searchThemes: "Search themes...",
+    noThemeFound: "No theme found.",
+    themesCount: "themes",
+    new: "New",
+    default: "Default",
   },
-  {
-    name: "Quarth",
-    value: "quarth",
+  sv: {
+    selectTheme: "Välj tema...",
+    searchThemes: "Sök teman...",
+    noThemeFound: "Inget tema hittades.",
+    themesCount: "teman",
+    new: "Nytt",
+    default: "Standard",
   },
-  {
-    name: "Ocean Breeze",
-    value: "ocean-breeze",
-  },
-  {
-    name: "Bold Tech",
-    value: "bold-tech",
-  },
-  {
-    name: "Neo Brutalism",
-    value: "neo-brutalism",
-  },
-  {
-    name: "Elegant Luxury",
-    value: "elegant-luxury",
-  },
-];
+};
 
-export function ThemeChooser() {
+export function ThemeChooser({ language }: { language: Language }) {
   const [open, setOpen] = React.useState(false);
   const { theme, setTheme, effectiveColorMode } = useTheme();
+  const t = translations[language];
+
+  const themes: Theme[] = [
+    {
+      name: t.default,
+      value: "default",
+    },
+    {
+      name: "Quarth",
+      value: "quarth",
+    },
+    {
+      name: "Ocean Breeze",
+      value: "ocean-breeze",
+    },
+    {
+      name: "Bold Tech",
+      value: "bold-tech",
+    },
+    {
+      name: "Neo Brutalism",
+      value: "neo-brutalism",
+    },
+    {
+      name: "Elegant Luxury",
+      value: "elegant-luxury",
+    },
+  ];
 
   const handleThemeSelect = (themeValue: string) => {
     setTheme(themeValue as any);
@@ -92,7 +113,7 @@ export function ThemeChooser() {
               />
             </div>
             <span className="truncate">
-              {selectedThemeData?.name || "Select theme..."}
+              {selectedThemeData?.name || t.selectTheme}
             </span>
           </div>
           <IconSelector className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -100,13 +121,13 @@ export function ThemeChooser() {
       </PopoverTrigger>
       <PopoverContent className="min-w-[280px] p-0">
         <Command>
-          <CommandInput placeholder="Search themes..." />
+          <CommandInput placeholder={t.searchThemes} />
           <CommandList>
             <ScrollArea>
-              <CommandEmpty>No theme found.</CommandEmpty>
+              <CommandEmpty>{t.noThemeFound}</CommandEmpty>
               <CommandGroup>
                 <div className="text-xs text-muted-foreground px-2 py-1.5 font-medium">
-                  {themes.length} themes
+                  {themes.length} {t.themesCount}
                 </div>
                 {themes.map((themeItem) => (
                   <CommandItem
@@ -138,7 +159,7 @@ export function ThemeChooser() {
                     <span className="flex-1">{themeItem.name}</span>
                     {themeItem.new && (
                       <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
-                        New
+                        {t.new}
                       </span>
                     )}
                     <IconCheck

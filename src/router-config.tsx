@@ -3,6 +3,7 @@ import GetStarted from "./get-started";
 import TablePage from "./table-page";
 import ProgramSelector from "./program-selector";
 import NotFound from "./not-found";
+import AboutPage from "./about-page";
 
 const routerconfig = [
   {
@@ -14,12 +15,16 @@ const routerconfig = [
         element: <GetStarted />,
       },
       {
-        path: "/program-selector/",
+        path: "/programs",
         element: <ProgramSelector />,
       },
       {
-        path: "/table-page/",
+        path: "/table",
         element: <TablePage />,
+      },
+      {
+        path: "/about",
+        element: <AboutPage />,
       },
       {
         path: "*",

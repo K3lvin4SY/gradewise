@@ -30,6 +30,7 @@ import {
 } from "./components/ui/tooltip";
 import { InputSearch } from "./input-search";
 import type { OutletContext } from "./types";
+import CoursePeriodsInput from "./components/ui/course-periods-input";
 
 function TablePage() {
   const { courses, setCourses, lthCourses, language } =
@@ -44,7 +45,7 @@ function TablePage() {
     credits: "",
     grade: "",
     year: "",
-    periods: "",
+    periods: [] as number[],
   });
 
   useEffect(() => {}, [program, year]);
@@ -73,9 +74,7 @@ function TablePage() {
               2,
               row.code,
               Number(row.year),
-              row.periods
-                ? row.periods.split(",").map((p) => Number(p.trim()) - 1)
-                : [],
+              row.periods,
               0
             ),
       ]
@@ -89,7 +88,7 @@ function TablePage() {
       credits: "",
       grade: "",
       year: "",
-      periods: "",
+      periods: [],
     });
     setSelectedCourseName("");
   }
@@ -123,6 +122,69 @@ function TablePage() {
     );
   }
 
+  // UI translations
+  const uiText = {
+    en: {
+      warning: "Warning",
+      entryReq: "This course has ",
+      entryReqCount: " entry requirements.",
+      entryReqAdvice:
+        "Please make sure you meet these requirements before enrolling.",
+      entryReqMore:
+        "You can find more information about the requirements in the course's ",
+      website: "website",
+      courseCode: "CourseCode",
+      course: "Course",
+      credits: "Credits",
+      grade: "Grade",
+      year: "Year",
+      periods: "Periods",
+      clearAll: "Clear all",
+      typeOrSelect: "Type or select a course...",
+    },
+    sv: {
+      warning: "Varning",
+      entryReq: "Denna kurs har ",
+      entryReqCount: " behörighetskrav.",
+      entryReqAdvice:
+        "Se till att du uppfyller dessa krav innan du registrerar dig.",
+      entryReqMore: "Du kan hitta mer information om kraven på kursens ",
+      website: "webbsida",
+      courseCode: "Kurskod",
+      course: "Kurs",
+      credits: "Poäng",
+      grade: "Betyg",
+      year: "År",
+      periods: "Perioder",
+      clearAll: "Rensa allt",
+      typeOrSelect: "Skriv eller välj en kurs...",
+    },
+  };
+  const t = uiText[language] || uiText.en;
+
+  // Table head localized
+  const tableHead = (
+    <TableHeader className="bg-card border-b">
+      <TableRow className="hover:bg-muted/0 text-base">
+        <TableHead className="font-semibold w-24">{t.courseCode}</TableHead>
+        <TableHead className="font-semibold">{t.course}</TableHead>
+        <TableHead className="font-semibold w-22 text-center">
+          {t.credits}
+        </TableHead>
+        <TableHead className="font-semibold w-20 text-center">
+          {t.grade}
+        </TableHead>
+        <TableHead className="font-semibold w-18 text-center">
+          {t.year}
+        </TableHead>
+        <TableHead className="font-semibold w-34 text-center">
+          {t.periods}
+        </TableHead>
+        <TableHead className="font-semibold w-16"></TableHead>
+      </TableRow>
+    </TableHeader>
+  );
+
   return (
     <Card className="w-full">
       <CardContent>
@@ -150,27 +212,23 @@ function TablePage() {
                               </TooltipTrigger>
                               <TooltipContent>
                                 <h1 className="text-lg font-bold text-amber-700">
-                                  Warning
+                                  {t.warning}
                                 </h1>
                                 <p>
-                                  This course has{" "}
-                                  {course.getEntryRequirements()} entry
-                                  requirements.
+                                  {t.entryReq}
+                                  {course.getEntryRequirements()}
+                                  {t.entryReqCount}
                                 </p>
+                                <p>{t.entryReqAdvice}</p>
                                 <p>
-                                  Please make sure you meet these requirements
-                                  before enrolling.
-                                </p>
-                                <p>
-                                  You can find more information about the
-                                  requirements in the course's{" "}
+                                  {t.entryReqMore}
                                   <a
                                     href={course.getWebsite()}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="underline hover:underline-offset-2 text-blue-600"
                                   >
-                                    website
+                                    {t.website}
                                   </a>
                                   .
                                 </p>
@@ -194,7 +252,7 @@ function TablePage() {
                     <TableCell className="text-center w-20">
                       <Input
                         placeholder={
-                          course.getGrade() ? course.getGrade() : "Grade"
+                          course.getGrade() ? course.getGrade() : t.grade
                         }
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
@@ -234,7 +292,7 @@ function TablePage() {
                   <Input
                     value={row.code}
                     onChange={(e) => setRow({ ...row, code: e.target.value })}
-                    placeholder="CourseCode"
+                    placeholder={t.courseCode}
                   />
                 </TableCell>
 
@@ -243,7 +301,7 @@ function TablePage() {
                     courses={lthCourses}
                     value={selectedCourseName}
                     onValueChange={setSelectedCourseName}
-                    placeholder="Type or select a course..."
+                    placeholder={t.typeOrSelect}
                     setRow={setRow}
                   />
                 </TableCell>
@@ -251,7 +309,7 @@ function TablePage() {
                 <TableCell className="w-22">
                   <Input
                     value={row.credits}
-                    placeholder="Credits"
+                    placeholder={t.credits}
                     onChange={(e) =>
                       setRow({ ...row, credits: e.target.value })
                     }
@@ -261,7 +319,7 @@ function TablePage() {
                 <TableCell className="w-20">
                   <Input
                     value={row.grade}
-                    placeholder="Grade"
+                    placeholder={t.grade}
                     onChange={(e) => setRow({ ...row, grade: e.target.value })}
                   />
                 </TableCell>
@@ -269,18 +327,15 @@ function TablePage() {
                 <TableCell className="w-18">
                   <Input
                     value={row.year}
-                    placeholder="Year"
+                    placeholder={t.year}
                     onChange={(e) => setRow({ ...row, year: e.target.value })}
                   />
                 </TableCell>
 
                 <TableCell className="w-34">
-                  <Input
+                  <CoursePeriodsInput
                     value={row.periods}
-                    placeholder="Periods"
-                    onChange={(e) =>
-                      setRow({ ...row, periods: e.target.value })
-                    }
+                    onChange={(periods) => setRow({ ...row, periods })}
                   />
                 </TableCell>
                 <TableCell className="w-16">
@@ -307,7 +362,7 @@ function TablePage() {
               variant="destructive"
               onClick={() => setCourses([])}
             >
-              Clear all <IconEraser />
+              {t.clearAll} <IconEraser />
             </Button>
           </div>
         </div>
@@ -316,18 +371,5 @@ function TablePage() {
   );
 }
 
-const tableHead = (
-  <TableHeader className="bg-card border-b">
-    <TableRow className="hover:bg-muted/0 text-base">
-      <TableHead className="font-semibold w-24">CourseCode</TableHead>
-      <TableHead className="font-semibold">Course</TableHead>
-      <TableHead className="font-semibold w-22 text-center">Credits</TableHead>
-      <TableHead className="font-semibold w-20 text-center">Grade</TableHead>
-      <TableHead className="font-semibold w-18 text-center">Year</TableHead>
-      <TableHead className="font-semibold w-34 text-center">Periods</TableHead>
-      <TableHead className="font-semibold w-16"></TableHead>
-    </TableRow>
-  </TableHeader>
-);
-
+// ...existing code...
 export default TablePage;
