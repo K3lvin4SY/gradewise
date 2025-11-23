@@ -26,19 +26,9 @@ import {
   CardTitle,
 } from "./components/ui/card";
 import { IconCheck, IconSelector } from "@tabler/icons-react";
+import type { OutletContext } from "./types";
 
 type Option = { value: string; label: string };
-
-type OutletContext = {
-  courses: CourseGrade[];
-  setCourses: React.Dispatch<React.SetStateAction<CourseGrade[]>>;
-  lthCourses: CourseGrade[];
-  setLthCourses: React.Dispatch<React.SetStateAction<CourseGrade[]>>;
-  selectedProgram: string;
-  setSelectedProgram: React.Dispatch<React.SetStateAction<string>>;
-  selectedYear: string;
-  setSelectedYear: React.Dispatch<React.SetStateAction<string>>;
-};
 
 function parseLthProgramData(courseData: any[]): CourseGrade[] {
   return courseData
@@ -64,7 +54,9 @@ function parseLthProgramData(courseData: any[]): CourseGrade[] {
             { length: course.periods },
             (_, i) => course.startPeriod + i
           ),
-          course.entryRequirements
+          course.entryRequirements,
+          course.homePage_en,
+          course.name_sv
         )
     )
     .filter(
@@ -102,17 +94,25 @@ function parseProgramData(data: any[]): CourseGrade[] {
             (_, i) => course.startPeriod + i
           ),
           course.entryRequirements,
-          course.homePage_en
+          course.homePage_en,
+          course.name_sv
         )
     );
 }
 
 function ProgramSelector() {
-  const { setCourses, setLthCourses, setSelectedProgram, setSelectedYear } =
-    useOutletContext<OutletContext>();
+  const {
+    setCourses,
+    setLthCourses,
+    setSelectedProgram,
+    setSelectedYear,
+    language,
+  } = useOutletContext<OutletContext>();
 
   const [programOptions, setProgramOptions] = useState<Option[]>([]);
   const [yearOptions, setYearOptions] = useState<Option[]>([]);
+
+  const [svProgramOptions, setSvProgramOptions] = useState<Option[]>([]);
 
   const [program, setProgram] = useState<string | undefined>(undefined);
   const [year, setYear] = useState<string | undefined>(undefined);
@@ -157,6 +157,11 @@ function ProgramSelector() {
           label: item.programmeCode + " - " + item.programme_en,
         }));
         setProgramOptions(programs);
+        const programsSv = data.map((item: any) => ({
+          value: item.programmeCode,
+          label: item.programmeCode + " - " + item.programme_sv,
+        }));
+        setSvProgramOptions(programsSv);
       });
 
     fetch("https://api.lth.lu.se/lot/courses/academic-years")
@@ -188,7 +193,7 @@ function ProgramSelector() {
             <div className="grid gap-3">
               <Combobox
                 key="program"
-                options={programOptions}
+                options={language === "en" ? programOptions : svProgramOptions}
                 type="program"
                 value={program}
                 onChange={setProgram}

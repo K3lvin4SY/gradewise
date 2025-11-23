@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ThemeProvider } from "./components/theme/theme-provider";
 import { ThemeToggle } from "./components/theme/theme-toggle";
@@ -7,6 +7,8 @@ import { CourseGrade } from "./models/CourseGrade";
 import { Link, Outlet } from "react-router-dom";
 import { NavBar } from "./nav-bar";
 import { parseLthProgramData } from "./program-selector";
+import { LanguageChooser } from "./components/ui/language-chooser";
+import type { Language } from "./types";
 
 function Layout() {
   const [lthCourses, setLthCourses] = useState<CourseGrade[]>([]);
@@ -29,24 +31,29 @@ function Layout() {
   const [selectedYear, setSelectedYearState] = useState<string>(
     window.sessionStorage.getItem("selectedYear") || ""
   );
+  const [language, setLanguageState] = useState<Language>(
+    (window.localStorage.getItem("language") as Language) || "en"
+  );
 
-  if (
-    selectedProgram !== "" &&
-    selectedYear !== "" &&
-    lthCourses.length === 0
-  ) {
-    fetch(
-      `https://api.lth.lu.se/lot/courses?programmeCode=${selectedProgram}&academicYearId=${selectedYear}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        const lthGrades = parseLthProgramData(data);
-        setLthCourses(lthGrades);
-      })
-      .catch((error) => {
-        console.error("Error fetching lthCourses:", error);
-      });
-  }
+  useEffect(() => {
+    if (
+      selectedProgram !== "" &&
+      selectedYear !== "" &&
+      lthCourses.length === 0
+    ) {
+      fetch(
+        `https://api.lth.lu.se/lot/courses?programmeCode=${selectedProgram}&academicYearId=${selectedYear}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          const lthGrades = parseLthProgramData(data);
+          setLthCourses(lthGrades);
+        })
+        .catch((error) => {
+          console.error("Error fetching lthCourses:", error);
+        });
+    }
+  }, [selectedProgram, selectedYear]);
 
   const setSelectedProgram: React.Dispatch<React.SetStateAction<string>> = (
     programOrUpdater
@@ -84,6 +91,18 @@ function Layout() {
     setCoursesState(coursesOrUpdater);
   };
 
+  const setLanguage: React.Dispatch<React.SetStateAction<Language>> = (
+    languageOrUpdater
+  ) => {
+    const newLanguage =
+      typeof languageOrUpdater === "function"
+        ? languageOrUpdater(language)
+        : languageOrUpdater;
+
+    window.localStorage.setItem("language", newLanguage);
+    setLanguageState(newLanguage);
+  };
+
   return (
     <ThemeProvider>
       <nav className="w-[80vw] mx-auto">
@@ -99,6 +118,7 @@ function Layout() {
           <div className="flex gap-2 w-[17em] justify-end">
             <ThemeChooser />
             <ThemeToggle />
+            <LanguageChooser language={language} setLanguage={setLanguage} />
           </div>
         </div>
       </nav>
@@ -113,6 +133,7 @@ function Layout() {
             setSelectedYear,
             selectedProgram,
             setSelectedProgram,
+            language,
           }}
         />
       </div>

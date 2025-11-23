@@ -2,11 +2,7 @@ import { useMemo } from "react";
 import SplitText from "./components/animated/SplitText";
 import { Button } from "./components/ui/button";
 import { Link, useOutletContext } from "react-router-dom";
-
-type OutletContext = {
-  selectedProgram: string;
-  selectedYear: string;
-};
+import type { OutletContext } from "./types";
 
 function GetStarted() {
   const { selectedProgram, selectedYear } = useOutletContext<OutletContext>();

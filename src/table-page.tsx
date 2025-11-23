@@ -29,20 +29,11 @@ import {
   TooltipTrigger,
 } from "./components/ui/tooltip";
 import { InputSearch } from "./input-search";
-
-type OutletContext = {
-  courses: CourseGrade[];
-  setCourses: React.Dispatch<React.SetStateAction<CourseGrade[]>>;
-  lthCourses: CourseGrade[];
-  setLthCourses: React.Dispatch<React.SetStateAction<CourseGrade[]>>;
-  selectedProgram: string;
-  setSelectedProgram: React.Dispatch<React.SetStateAction<string>>;
-  selectedYear: string;
-  setSelectedYear: React.Dispatch<React.SetStateAction<string>>;
-};
+import type { OutletContext } from "./types";
 
 function TablePage() {
-  const { courses, setCourses, lthCourses } = useOutletContext<OutletContext>();
+  const { courses, setCourses, lthCourses, language } =
+    useOutletContext<OutletContext>();
   const { program, year } = useParams<{ program?: string; year?: string }>();
   const [selectedCourseName, setSelectedCourseName] = useState<
     string | CourseGrade
@@ -65,14 +56,15 @@ function TablePage() {
         ...prev,
         selectedCourseName instanceof CourseGrade
           ? new CourseGrade(
-              selectedCourseName.getName(),
+              selectedCourseName.getName("en"),
               selectedCourseName.getCredits(),
               row.grade,
               selectedCourseName.getGradingScale(),
               selectedCourseName.getCode(),
               selectedCourseName.getYear(),
               selectedCourseName.getPeriods(),
-              selectedCourseName.getEntryRequirements()
+              selectedCourseName.getEntryRequirements(),
+              selectedCourseName.getName("sv")
             )
           : new CourseGrade(
               selectedCourseName,
@@ -115,7 +107,7 @@ function TablePage() {
           return c;
         } else {
           return new CourseGrade(
-            course.getName(),
+            course.getName("en"),
             course.getCredits(),
             grade,
             course.getGradingScale(),
@@ -123,7 +115,8 @@ function TablePage() {
             course.getYear(),
             course.getPeriods(),
             course.getEntryRequirements(),
-            course.getWebsite()
+            course.getWebsite(),
+            course.getName("sv")
           );
         }
       })
@@ -189,7 +182,9 @@ function TablePage() {
 
                     <TableCell className="text-left">
                       <div className="flex items-center gap-1">
-                        <div className="truncate">{course.getName()}</div>
+                        <div className="truncate">
+                          {course.getName(language)}
+                        </div>
                       </div>
                     </TableCell>
 

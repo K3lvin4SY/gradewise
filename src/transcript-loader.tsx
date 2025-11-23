@@ -45,7 +45,7 @@ function TranscriptLoader({ setCourseGrades }: PropType) {
             );
             if (icg) {
               return new CourseGrade(
-                cg.getName(),
+                cg.getName("en"),
                 cg.getCredits(),
                 icg.getGrade(),
                 cg.getGradingScale(),
@@ -53,7 +53,8 @@ function TranscriptLoader({ setCourseGrades }: PropType) {
                 cg.getYear(),
                 cg.getPeriods(),
                 cg.getEntryRequirements(),
-                cg.getWebsite()
+                cg.getWebsite(),
+                cg.getName("sv")
               );
             }
             return cg;
@@ -148,7 +149,12 @@ async function loadTranscript(file: File): Promise<CourseGrade[]> {
           course.credits,
           course.grade,
           course.gradingScale,
-          course.code
+          course.code,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          course.name
         )
     );
   } catch (error) {

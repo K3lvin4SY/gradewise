@@ -1,3 +1,5 @@
+import type { Language } from "@/types";
+
 class CourseGrade {
   private readonly name: string;
   private readonly credits: number;
@@ -8,6 +10,7 @@ class CourseGrade {
   private readonly periods?: number[];
   private readonly entryRequirements?: number;
   private readonly website?: string;
+  private readonly name_sv?: string;
 
   constructor(
     name: string,
@@ -18,9 +21,11 @@ class CourseGrade {
     year?: number,
     periods?: number[],
     entryRequirements?: number,
-    website?: string
+    website?: string,
+    name_sv?: string
   ) {
     this.name = name;
+    this.name_sv = name_sv;
     this.credits = credits;
     this.grade = grade;
     this.gradingScale = gradingScale;
@@ -46,8 +51,8 @@ class CourseGrade {
     return this.periods ? this.periods : [];
   }
 
-  getName(): string {
-    return this.name;
+  getName(language?: Language): string {
+    return language === "sv" ? this.name_sv ?? this.name : this.name;
   }
 
   shouldBeGraded(): boolean {
@@ -93,7 +98,8 @@ class CourseGrade {
           item.year,
           item.periods,
           item.entryRequirements,
-          item.website
+          item.website,
+          item.name_sv
         );
       });
     } catch (error) {
