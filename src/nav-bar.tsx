@@ -42,7 +42,7 @@ export function NavBar({
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link to="/">{language === "en" ? "Welcome" : "Välkommen"}</Link>
+              <Link to="/">{text.welcome}</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem className="flex gap-2 w-[9em] justify-center">
@@ -50,9 +50,7 @@ export function NavBar({
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link to="/programs">
-                {language === "en" ? "Select Program" : "Välj Program"}
-              </Link>
+              <Link to="/programs">{text.selectProgram}</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem className="flex gap-2 w-[9em] justify-center">
@@ -60,9 +58,7 @@ export function NavBar({
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link to="/table">
-                {language === "en" ? "Analyze Courses" : "Analysera Kurser"}
-              </Link>
+              <Link to="/table">{text.analyzeCourses}</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
