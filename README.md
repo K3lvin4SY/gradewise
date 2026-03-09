@@ -1,99 +1,166 @@
+<div align="center">
+
+<img src="public/gradewise-logo.svg" alt="GradeWise" width="120" />
+
 # GradeWise
 
-## Features
+**The ultimate academic companion for tracking grades and visualizing progress — tailored for LTH students.**
 
-### Grade Management
+<br/>
 
-- Track your courses and grades
-- Edit grades in directly in a table
-- Calculate your average grade
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-### Insert Courses
+</div>
 
-- Import a programs courses from LTHs programs
-- Insert a course manually
-- Insert a secific course from LTHs courses
-- Upload a LADOK national transcript of records (pdf)
+---
 
-### Theming & UI
+## Problem Statement
 
-- Multiple Themes
-  - Default
-  - Quarth
-  - Ocean Breeze
-  - Bold Tech
-  - Neo Brutalism
-  - Elegant Luxury
-- Dark/light mode support
+Managing academic progress can be tedious. Students often rely on:
 
-### Entry Requirements Warning
+- 📝 **Messy spreadsheets** that require constant manual updating.
+- 🏛️ **University portals** (like LADOK) that are great for official records but poor for "what-if" planning and quick overviews.
+- 🧠 **Mental math** to calculate weighted averages across different credit systems.
 
-If a course has any reqirements, a waring will be displayed along with a link to the course's website.
+Students need a tool that understands their specific program structure, calculates averages instantly, and provides a clear visual overview of their academic standing.
+
+---
+
+## Solution
+
+**GradeWise** bridges the gap between official records and personal planning. It offers a specialized interface for tracking courses, importing data directly from university sources (LTH), and visualizing your academic journey.
+
+| Feature               | GradeWise                                             | Excel / Sheets            | University Portal     |
+| --------------------- | ----------------------------------------------------- | ------------------------- | --------------------- |
+| **Data Import**       | One-click import via PDF (LADOK) or Program selection | Manual entry only         | Read-only             |
+| **Grade Calculation** | Automatic weighted average                            | Requires complex formulas | Often hidden or basic |
+| **Program Knowledge** | Built-in LTH course database                          | None                      | High                  |
+| **UI Experience**     | Modern, themeable, interactive                        | Grid-based                | Legacy enterprise UI  |
+
+### Key Features
+
+- **Smart Course Management**:
+  - **Program Import**: Automatically load all courses for specific LTH programs.
+  - **LADOK Integration**: Upload your official LADOK transcript PDF to instantly populate completed courses and grades.
+  - **Manual Entry**: Add specific courses or custom entries as needed.
+- **Grade Tracking**:
+  - Edit grades directly in an interactive table.
+  - Real-time calculation of weighted average grades.
+- **Compliance & Requirements**:
+  - Automatic warnings for course entry requirements with direct links to official course syllabi.
+- **Rich Theming**:
+  - Toggle between **Dark** and **Light** modes.
+  - Choose from 6+ professional themes: _Default, Quarth, Ocean Breeze, Bold Tech, Neo Brutalism, Elegant Luxury_.
+
+---
+
+## Tech Stack
+
+GradeWise is built with modern web technologies to ensure a fast, responsive, and maintainable application.
+
+### Frontend Architecture
+
+| Technology                                        | Purpose                                                     |
+| ------------------------------------------------- | ----------------------------------------------------------- |
+| **[React 19](https://react.dev/)**                | Core UI library for building interactive components         |
+| **[TypeScript](https://www.typescriptlang.org/)** | Type safety and developer experience                        |
+| **[Vite](https://vitejs.dev/)**                   | Next-generation frontend tooling and bundler                |
+| **[Tailwind CSS v4](https://tailwindcss.com/)**   | Utility-first CSS framework for styling                     |
+| **[Shadcn UI](https://ui.shadcn.com/)**           | Reusable, accessible component primitives based on Radix UI |
+| **[React Router v7](https://reactrouter.com/)**   | Client-side routing                                         |
+| **[GSAP](https://gsap.com/)**                     | High-performance animations                                 |
+| **[Tabler Icons](https://tabler-icons.io/)**      | Clean and consistent icon set                               |
+
+---
+
+## Project Structure
+
+```bash
+gradewise/
+├── public/                 # Static assets
+├── src/
+│   ├── components/
+│   │   ├── animated/       # GSAP powered components
+│   │   ├── theme/          # Theme providers and toggles
+│   │   └── ui/             # Shadcn UI base components
+│   ├── lib/                # Utility functions
+│   ├── models/             # Data models (CourseGrade.ts)
+│   ├── about-page.tsx      # Application pages
+│   ├── average-grade.tsx   # Grade calculation logic
+│   ├── main.tsx            # Entry point
+│   ├── router-config.tsx   # Route definitions
+│   └── transcript-loader.tsx # PDF parsing logic
+├── components.json         # Shadcn UI configuration
+├── package.json            # Dependencies and scripts
+└── vite.config.ts          # Vite configuration
+```
+
+---
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js
-- npm
+- **Node.js** (Latest LTS recommended)
+- **npm** (comes with Node.js)
 
 ### Installation
 
-1. **Install dependencies**
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/K3lvin4SY/gradewise.git
+   cd gradewise
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+
+   ```bash
+   npm run dev
+   ```
+
+   Navigate to `http://localhost:5173` to view the application.
+
+### Build for Production
+
+To create an optimized production build:
 
 ```bash
-  npm install
+npm run build
+npm run preview
 ```
 
-### Development
+---
 
-1. **Start the development server**
+## Usage Scenarios
 
-```bash
-  npm run dev
-```
+### 1. Planning a Program (Example: LTH Program C)
 
-2. **Open your browser**
-   Navigate to `http://localhost:5173` to view the application
+Use this scenario if you want to populate your grade book with the standard curriculum for a specific program.
 
-### Build & Deployment
+1. Launch the application and click **Get Started**.
+2. Locate the **Program Selector** dropdown.
+3. Select **C - Information and Communication Engineering**.
+4. Choose your **Start Year** (e.g., `23/24`) from the secondary dropdown.
+5. Click **Select**. The table will populate with the program's mandatory courses.
+6. Click into the `Grade` column for any course to input your results (e.g., `3`, `4`, `5`).
+7. Watch your average grade update automatically at the top of the screen.
 
-1. **Build for production**
+### 2. Importing Existing Grades (LADOK)
 
-```bash
-   npm run build
-```
+Use this scenario if you already have a transcript and want to visualize your current standing without manual data entry.
 
-2. **Preview the production build**
-
-```bash
-   npm run preview
-```
-
-### Usage
-
-#### Scenario 1
-
-The following instruction will describe how you can see your average calculated grade in LTHs program C with the start year 23/24
-
-1. Follow the steps in the [Build & Deployment](#build--deployment) section to build and deploy the application.
-2. Enter `o` and press `ENTER` into the terminal you deployed the application. You should now be at the landing page in the application.
-3. Press the button `Get Started`.
-4. Press the Drop-down menu `Select program...`.
-5. Select & press the Option `C - Information and Communication Engineering`.
-6. Press the Drop-down menu `Select start year...`.
-7. Scroll down the list until you see the option `23/24`.
-8. Select & press the Option `23/24`.
-9. Press the button `Select`.
-10. For each course you have done, click the `Grade` inputfield and type in your grade.
-
-#### Scenario 2
-
-The following instruction will describe how you can use the uploud transcript feature.
-This scenario will assume you already have downloaded a national transcript of records from LADOK in english.
-
-1. Complete steps 1-9 in [Scenario 1](#scenario-1).
-2. Press the button `Upload Transcript`.
-3. Choose and select your national trascript of records you got from LADOK.
-4. Wait until it have finished loading
-5. Done! Now your courses should have your grades inserted.
+1. Download your **Official Transcript of Records** (in English) as a PDF from Ladok.
+2. In GradeWise, complete the initial setup (or ensure you are on the main dashboard).
+3. Click the **Upload Transcript** button.
+4. Select your downloaded PDF file.
+5. Wait for the processing to complete. Your completed courses and grades will be automatically inserted into the table, replacing or updating existing entries.
